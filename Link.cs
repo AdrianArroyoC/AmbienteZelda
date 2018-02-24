@@ -12,14 +12,8 @@ namespace AmbienteZelda
     {
         private PictureBox[,] ambiente;
         private int[] coordenadasCasa = new int[2];
-        private bool enCasa = false;
 
-        public Link(PictureBox[,] ambiente, int x, int y)
-        {
-            Mover(ambiente, x, y);
-        }
-
-        public int[] Mover(PictureBox[,] ambiente, int x, int y, KeyEventArgs e = null)
+        public int[] Mover(PictureBox[,] ambiente, int x, int y, PreviewKeyDownEventArgs e = null)
         {
             this.ambiente = ambiente;
             int[] coordenadas = {x, y};
@@ -29,7 +23,7 @@ namespace AmbienteZelda
                 {
                     coordenadas[1] -= 1;
                 }
-                if (e.KeyData == Keys.Down && y < this.ambiente.GetLength(0) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
+                if (e.KeyData == Keys.Down && y < this.ambiente.GetLength(1) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
                 {
                     coordenadas[1] += 1;
                 }
@@ -42,40 +36,22 @@ namespace AmbienteZelda
                     coordenadas[0] += 1;
                 }
             }
-            Cargar(ambiente[coordenadas[0], coordenadas[1]], this.ambiente[x, y]);
             return coordenadas;
         }
 
-        private void Cargar(PictureBox nuevo, PictureBox anterior = null)
-        {
-            if (anterior != null)
-            {
-                anterior.Image = null;
-            }
-            if (!enCasa)
-            {
-                nuevo.Image = Image.FromFile("C:\\Users\\adria\\source\\repos\\AmbienteZelda\\AmbienteZelda\\src\\Link.png");
-            }
-        }
+		public void ReconocerCasa(int x, int y)
+		{
+			coordenadasCasa[0] = x;
+			coordenadasCasa[1] = y;
+		}
 
-        private bool VerificarMovimiento(int x, int y)
+		private bool VerificarMovimiento(int x, int y)
         {
-            if (coordenadasCasa != null && coordenadasCasa[0] == x && coordenadasCasa[y] == y)
-            {
-                this.enCasa = true;
-                return true;
-            }
-            if  (this.ambiente[x, y].Image == null)
+            if  (ambiente[x, y].Image == null || (x == coordenadasCasa[0] && y == coordenadasCasa[1]))
             {
                 return true;
             }
             return false;
-        }
-
-        public void Reconocer(int x, int y)
-        {
-            this.coordenadasCasa[0] = x;
-            this.coordenadasCasa[1] = y;
         }
     }
 }
