@@ -46,6 +46,7 @@
 			// 
 			// PanelAmbiente
 			// 
+			this.PanelAmbiente.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.PanelAmbiente.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PanelAmbiente.BackgroundImage")));
 			this.PanelAmbiente.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.PanelAmbiente.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -109,7 +110,7 @@
 			this.CajaCuadrosX.Margin = new System.Windows.Forms.Padding(4);
 			this.CajaCuadrosX.Name = "CajaCuadrosX";
 			this.CajaCuadrosX.Size = new System.Drawing.Size(73, 22);
-			this.CajaCuadrosX.TabIndex = 1;
+			this.CajaCuadrosX.TabIndex = 0;
 			this.CajaCuadrosX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosX_KeyPress);
 			// 
 			// CajaCuadrosY
@@ -118,7 +119,7 @@
 			this.CajaCuadrosY.Margin = new System.Windows.Forms.Padding(4);
 			this.CajaCuadrosY.Name = "CajaCuadrosY";
 			this.CajaCuadrosY.Size = new System.Drawing.Size(73, 22);
-			this.CajaCuadrosY.TabIndex = 0;
+			this.CajaCuadrosY.TabIndex = 1;
 			this.CajaCuadrosY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosY_KeyPress);
 			// 
 			// botones

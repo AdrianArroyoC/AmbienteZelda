@@ -42,6 +42,7 @@ namespace AmbienteZelda
 					PanelAmbiente.Width = 500;
 					PanelAmbiente.Height = 500;
 					PanelAmbiente.Controls.Clear();
+					PanelAmbiente.BackgroundImage = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.png");
 					avatar = false;
 					ambiente = new PictureBox[cuadrosX, cuadrosY];
 					int a = PanelAmbiente.Width / cuadrosX;
@@ -108,7 +109,6 @@ namespace AmbienteZelda
 					adrian = new Link();
 					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.png");
 					avatar = true;
-					BotonObstaculo.Enabled = true;
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
 					MessageBox.Show("Selecciona el boton del pino para colocar con click derecho y remover con izquierdo los obstaculos,"
@@ -121,6 +121,7 @@ namespace AmbienteZelda
 					adrian.ReconocerCasa(x, y);
 					xC = x;
 					yC = y;
+					BotonObstaculo.Enabled = true;
 				}
 			}
 		}
