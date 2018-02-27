@@ -42,7 +42,7 @@ namespace AmbienteZelda
 					PanelAmbiente.Width = 500;
 					PanelAmbiente.Height = 500;
 					PanelAmbiente.Controls.Clear();
-					PanelAmbiente.BackgroundImage = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.png");
+					PanelAmbiente.BackgroundImage = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg");
 					avatar = false;
 					ambiente = new PictureBox[cuadrosX, cuadrosY];
 					int a = PanelAmbiente.Width / cuadrosX;
@@ -61,7 +61,6 @@ namespace AmbienteZelda
 								Name = "CajaImagen" + (i - 1).ToString() + "-" + (j - 1).ToString() + "",
 								BackColor = Color.Transparent,
 								SizeMode = PictureBoxSizeMode.StretchImage
-
 							};
 							CajaImagen.MouseClick += CajaImagen_MouseClick;
 							ambiente[i - 1, j - 1] = CajaImagen;
