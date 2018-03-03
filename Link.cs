@@ -13,9 +13,13 @@ namespace AmbienteZelda
         private PictureBox[,] ambiente;
         private int[] coordenadasCasa = new int[2];
 
-        public int[] Mover(PictureBox[,] ambiente, int x, int y, PreviewKeyDownEventArgs e = null)
+		public Link(PictureBox[,] ambiente)
+		{
+			this.ambiente = ambiente;
+		}
+
+        public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
         {
-            this.ambiente = ambiente;
             int[] coordenadas = {x, y};
             if (e != null)
             {
@@ -38,6 +42,11 @@ namespace AmbienteZelda
             }
             return coordenadas;
         }
+
+		public void ReconocerAmbiente(PictureBox[,] ambiente)
+		{
+			this.ambiente = ambiente;
+		}
 
 		public void ReconocerCasa(int x, int y)
 		{

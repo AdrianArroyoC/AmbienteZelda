@@ -28,7 +28,6 @@ namespace AmbienteZelda
         public Ventana()
         {
             InitializeComponent();
-			//MessageBox.Show("Bienvenido al ambiente de Hyrule selecciona la cantidad de cuadros a lo largo y alto del mapa para empezar.");
         }
         
         private void BotonCrearCuadricula_Click(object sender, EventArgs e)
@@ -57,18 +56,18 @@ namespace AmbienteZelda
 							{
 								Location = new System.Drawing.Point(i * a - a, j * l - l),
 								Size = new System.Drawing.Size(a, l),
-								BorderStyle = BorderStyle.FixedSingle,
+								BorderStyle = BorderStyle.None,
 								Name = "CajaImagen" + (i - 1).ToString() + "-" + (j - 1).ToString() + "",
 								BackColor = Color.Transparent,
 								SizeMode = PictureBoxSizeMode.StretchImage
 							};
 							CajaImagen.MouseClick += CajaImagen_MouseClick;
+							CajaImagen.Paint += CajaImagen_Paint;
 							ambiente[i - 1, j - 1] = CajaImagen;
 							PanelAmbiente.Controls.Add(CajaImagen);
 						}
 					}
 					BotonAvatar.Enabled = true;
-					//MessageBox.Show("Selecciona la ubicacion inicial del avatar");
 					SeleccionarBoton();
 				}
 				else
@@ -81,6 +80,12 @@ namespace AmbienteZelda
 				MessageBox.Show("Debes llenar ambos campos");
 			}
         }
+
+		private void CajaImagen_Paint(object sender, PaintEventArgs e)
+		{
+			PictureBox CajaImagen = sender as PictureBox;
+			ControlPaint.DrawBorder(e.Graphics, CajaImagen.ClientRectangle, Color.Gray, ButtonBorderStyle.Solid);
+		}
 
 		private void CajaImagen_MouseClick(object sender, MouseEventArgs e)
 		{
@@ -105,12 +110,11 @@ namespace AmbienteZelda
 				{
 					xA = x;
 					yA = y;
-					adrian = new Link();
+					adrian = new Link(ambiente);
 					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
 					avatar = true;
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
-					//MessageBox.Show("Selecciona el boton del castillo para colocar una sola meta para el recorrido.");
 				}
 				else if (boton == 2 && casa == false && CajaImagen.Image == null)
 				{
@@ -120,7 +124,6 @@ namespace AmbienteZelda
 					xC = x;
 					yC = y;
 					BotonObstaculo.Enabled = true;
-					//MessageBox.Show("Selecciona el boton del arbol para colocar con click derecho y remover con izquierdo los obstaculos");
 				}
 			}
 		}
@@ -145,26 +148,26 @@ namespace AmbienteZelda
 
         private void SeleccionarBoton()
         {
-            BotonObstaculo.BackColor = SystemColors.AppWorkspace;
-            BotonAvatar.BackColor = SystemColors.AppWorkspace;
-            BotonCasa.BackColor = SystemColors.AppWorkspace;
+			BotonObstaculo.FlatStyle = FlatStyle.Popup;
+			BotonAvatar.FlatStyle = FlatStyle.Popup;
+			BotonCasa.FlatStyle = FlatStyle.Popup;
 			if (!fin)
 			{
 				if (boton == 0)
 				{
-					BotonObstaculo.BackColor = SystemColors.ActiveCaption;
+					BotonObstaculo.FlatStyle = FlatStyle.Standard;
 				}
 				else if (boton == 1)
 				{
-					BotonAvatar.BackColor = SystemColors.ActiveCaption;
+					BotonAvatar.FlatStyle = FlatStyle.Standard;
 					PanelAmbiente.Focus();
 				}
 				else if (boton == 2)
 				{
-					BotonCasa.BackColor = SystemColors.ActiveCaption;
+					BotonCasa.FlatStyle = FlatStyle.Standard;
 				}
 			}
-        }
+		}
 		
         private void BotonObstaculo_Click(object sender, EventArgs e)
         {
@@ -176,7 +179,11 @@ namespace AmbienteZelda
         {
             boton = 1;
             SeleccionarBoton();
-        }
+			if (avatar)
+			{
+				adrian.ReconocerAmbiente(ambiente);
+			}
+		}
 
         private void BotonCasa_Click(object sender, EventArgs e)
         {
@@ -188,14 +195,14 @@ namespace AmbienteZelda
 		{
 			if (boton == 1 && !fin)
 			{
-				int[] coordenadas = adrian.Mover(ambiente, xA, yA, e);
+				int[] coordenadas = adrian.Mover(xA, yA, e);
 				ambiente[xA, yA].Image = null;
 				if (casa)
 				{
 					if (coordenadas[0] == xC && coordenadas[1] == yC)
 					{
 						fin = true;
-						//MessageBox.Show("Haz llegado a tu casa");
+						MessageBox.Show("Game Over");
 						BotonAvatar.Enabled = false;
 						BotonCasa.Enabled = false;
 						BotonObstaculo.Enabled = false;
@@ -206,6 +213,11 @@ namespace AmbienteZelda
 				xA = coordenadas[0];
 				yA = coordenadas[1];
 			}
+		}
+
+		private void PanelAmbiente_Paint(object sender, PaintEventArgs e)
+		{
+			ControlPaint.DrawBorder(e.Graphics, PanelAmbiente.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
 		}
 	}
 }

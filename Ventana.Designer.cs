@@ -55,6 +55,7 @@
 			this.PanelAmbiente.Name = "PanelAmbiente";
 			this.PanelAmbiente.Size = new System.Drawing.Size(666, 615);
 			this.PanelAmbiente.TabIndex = 0;
+			this.PanelAmbiente.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelAmbiente_Paint);
 			this.PanelAmbiente.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PanelAmbiente_PreviewKeyDown);
 			// 
 			// datos
@@ -141,6 +142,7 @@
 			this.BotonCasa.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BotonCasa.BackgroundImage")));
 			this.BotonCasa.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonCasa.Enabled = false;
+			this.BotonCasa.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.BotonCasa.Location = new System.Drawing.Point(240, 30);
 			this.BotonCasa.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonCasa.Name = "BotonCasa";
@@ -154,6 +156,7 @@
 			this.BotonAvatar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BotonAvatar.BackgroundImage")));
 			this.BotonAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonAvatar.Enabled = false;
+			this.BotonAvatar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.BotonAvatar.Location = new System.Drawing.Point(130, 31);
 			this.BotonAvatar.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonAvatar.Name = "BotonAvatar";
@@ -167,6 +170,7 @@
 			this.BotonObstaculo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BotonObstaculo.BackgroundImage")));
 			this.BotonObstaculo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonObstaculo.Enabled = false;
+			this.BotonObstaculo.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.BotonObstaculo.Location = new System.Drawing.Point(21, 30);
 			this.BotonObstaculo.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonObstaculo.Name = "BotonObstaculo";
