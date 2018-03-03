@@ -28,7 +28,7 @@ namespace AmbienteZelda
         public Ventana()
         {
             InitializeComponent();
-			MessageBox.Show("Bienvenido al ambiente de Hyrule selecciona la cantidad de cuadros a lo largo y alto del mapa para empezar.");
+			//MessageBox.Show("Bienvenido al ambiente de Hyrule selecciona la cantidad de cuadros a lo largo y alto del mapa para empezar.");
         }
         
         private void BotonCrearCuadricula_Click(object sender, EventArgs e)
@@ -68,7 +68,7 @@ namespace AmbienteZelda
 						}
 					}
 					BotonAvatar.Enabled = true;
-					MessageBox.Show("Selecciona la ubicacion inicial del avatar");
+					//MessageBox.Show("Selecciona la ubicacion inicial del avatar");
 					SeleccionarBoton();
 				}
 				else
@@ -94,7 +94,7 @@ namespace AmbienteZelda
 				{
 					if (e.Button == MouseButtons.Left && CajaImagen.Image == null)
 					{
-						CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Arbol.png");
+						CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Arbol.jpg");
 					}
 					else if (e.Button == MouseButtons.Right)
 					{
@@ -106,21 +106,21 @@ namespace AmbienteZelda
 					xA = x;
 					yA = y;
 					adrian = new Link();
-					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.png");
+					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
 					avatar = true;
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
-					MessageBox.Show("Selecciona el boton del pino para colocar con click derecho y remover con izquierdo los obstaculos,"
-						+ " tambien puedes seleccionar el boton del castillo para colocar una sola meta para el recorrido.");
+					//MessageBox.Show("Selecciona el boton del castillo para colocar una sola meta para el recorrido.");
 				}
 				else if (boton == 2 && casa == false && CajaImagen.Image == null)
 				{
-					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.png");
+					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.jpg");
 					casa = true;
 					adrian.ReconocerCasa(x, y);
 					xC = x;
 					yC = y;
 					BotonObstaculo.Enabled = true;
+					//MessageBox.Show("Selecciona el boton del arbol para colocar con click derecho y remover con izquierdo los obstaculos");
 				}
 			}
 		}
@@ -195,14 +195,14 @@ namespace AmbienteZelda
 					if (coordenadas[0] == xC && coordenadas[1] == yC)
 					{
 						fin = true;
-						MessageBox.Show("Haz llegado a tu castillo");
+						//MessageBox.Show("Haz llegado a tu casa");
 						BotonAvatar.Enabled = false;
 						BotonCasa.Enabled = false;
 						BotonObstaculo.Enabled = false;
 						return;
 					}
 				}
-				ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.png");
+				ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
 				xA = coordenadas[0];
 				yA = coordenadas[1];
 			}
