@@ -12,45 +12,49 @@ namespace AmbienteZelda
 {
     public partial class Ventana : Form
     {
-        private int cuadrosY;
-        private int cuadrosX;
-        private PictureBox[,] ambiente;
-        private Link adrian;
-        private int xA;
-        private int yA;
-        private int boton = 1;
-        private bool avatar = false;
-        private bool casa = false;
-        private int xC;
-		private int yC;
-		private bool fin = false;
+        private int CuadrosEnY {get; set;}
+        private int CuadrosEnX {get; set;}
+        private PictureBox[,] Ambiente {get; set;}
+		private Link Adrian {get; set;}
+		private int XAvatar {get; set;}
+		private int YAvatar {get; set;}
+		private int Boton {get; set;}
+		private bool Avatar {get; set;}
+		private bool Casa {get; set;}
+        private int XCasa {get; set;}
+		private int YCasa {get; set;}
+		private bool Fin {get; set;}
 
         public Ventana()
         {
             InitializeComponent();
+			Boton = 1;
+			Avatar = false;
+			Casa = false;
+			Fin = false;
         }
         
         private void BotonCrearCuadricula_Click(object sender, EventArgs e)
         {
 			if (CajaCuadrosX.Text != "" && CajaCuadrosY.Text != "")
 			{
-				cuadrosY = Convert.ToInt32(CajaCuadrosY.Text);
-				cuadrosX = Convert.ToInt32(CajaCuadrosX.Text);
-				if (cuadrosY >= 10 && cuadrosY <= 100 && cuadrosX >= 10 && cuadrosX <= 100)
+				CuadrosEnY = Convert.ToInt32(CajaCuadrosY.Text);
+				CuadrosEnX = Convert.ToInt32(CajaCuadrosX.Text);
+				if (CuadrosEnY >= 10 && CuadrosEnY <= 100 && CuadrosEnX >= 10 && CuadrosEnX <= 100)
 				{
 					PanelAmbiente.Width = 500;
 					PanelAmbiente.Height = 500;
 					PanelAmbiente.Controls.Clear();
 					PanelAmbiente.BackgroundImage = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg");
-					avatar = false;
-					ambiente = new PictureBox[cuadrosX, cuadrosY];
-					int a = PanelAmbiente.Width / cuadrosX;
-					int l = PanelAmbiente.Height / cuadrosY;
-					PanelAmbiente.Width = cuadrosX * a;
-					PanelAmbiente.Height = cuadrosY * l;
-					for (int i = 1; i <= cuadrosX; i++)
+					Avatar = false;
+					Ambiente = new PictureBox[CuadrosEnX, CuadrosEnY];
+					int a = PanelAmbiente.Width / CuadrosEnX;
+					int l = PanelAmbiente.Height / CuadrosEnY;
+					PanelAmbiente.Width = CuadrosEnX * a;
+					PanelAmbiente.Height = CuadrosEnY * l;
+					for (int i = 1; i <= CuadrosEnX; i++)
 					{
-						for (int j = 1; j <= cuadrosY; j++)
+						for (int j = 1; j <= CuadrosEnY; j++)
 						{
 							PictureBox CajaImagen = new PictureBox
 							{
@@ -63,7 +67,7 @@ namespace AmbienteZelda
 							};
 							CajaImagen.MouseClick += CajaImagen_MouseClick;
 							CajaImagen.Paint += CajaImagen_Paint;
-							ambiente[i - 1, j - 1] = CajaImagen;
+							Ambiente[i - 1, j - 1] = CajaImagen;
 							PanelAmbiente.Controls.Add(CajaImagen);
 						}
 					}
@@ -89,13 +93,13 @@ namespace AmbienteZelda
 
 		private void CajaImagen_MouseClick(object sender, MouseEventArgs e)
 		{
-			if (!fin)
+			if (!Fin)
 			{
 				PictureBox CajaImagen = sender as PictureBox;
 				string[] coordenadas = CajaImagen.Name.Replace("CajaImagen", "").Split('-');
 				int x = Convert.ToInt32(coordenadas[0]);
 				int y = Convert.ToInt32(coordenadas[1]);
-				if (boton == 0)
+				if (Boton == 0)
 				{
 					if (e.Button == MouseButtons.Left && CajaImagen.Image == null)
 					{
@@ -106,23 +110,23 @@ namespace AmbienteZelda
 						CajaImagen.Image = null;
 					}
 				}
-				else if (this.boton == 1 && this.avatar == false && CajaImagen.Image == null)
+				else if (this.Boton == 1 && this.Avatar == false && CajaImagen.Image == null)
 				{
-					xA = x;
-					yA = y;
-					adrian = new Link(ambiente);
+					XAvatar = x;
+					YAvatar = y;
+					Adrian = new Link(Ambiente);
 					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
-					avatar = true;
+					Avatar = true;
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
 				}
-				else if (boton == 2 && casa == false && CajaImagen.Image == null)
+				else if (Boton == 2 && Casa == false && CajaImagen.Image == null)
 				{
 					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.jpg");
-					casa = true;
-					adrian.ReconocerCasa(x, y);
-					xC = x;
-					yC = y;
+					Casa = true;
+					Adrian.ReconocerCasa(x, y);
+					XCasa = x;
+					YCasa = y;
 					BotonObstaculo.Enabled = true;
 				}
 			}
@@ -151,18 +155,18 @@ namespace AmbienteZelda
 			BotonObstaculo.FlatStyle = FlatStyle.Popup;
 			BotonAvatar.FlatStyle = FlatStyle.Popup;
 			BotonCasa.FlatStyle = FlatStyle.Popup;
-			if (!fin)
+			if (!Fin)
 			{
-				if (boton == 0)
+				if (Boton == 0)
 				{
 					BotonObstaculo.FlatStyle = FlatStyle.Standard;
 				}
-				else if (boton == 1)
+				else if (Boton == 1)
 				{
 					BotonAvatar.FlatStyle = FlatStyle.Standard;
 					PanelAmbiente.Focus();
 				}
-				else if (boton == 2)
+				else if (Boton == 2)
 				{
 					BotonCasa.FlatStyle = FlatStyle.Standard;
 				}
@@ -171,37 +175,37 @@ namespace AmbienteZelda
 		
         private void BotonObstaculo_Click(object sender, EventArgs e)
         {
-            boton = 0;
+            Boton = 0;
             SeleccionarBoton();
         }
 
         private void BotonAvatar_Click(object sender, EventArgs e)
         {
-            boton = 1;
+            Boton = 1;
             SeleccionarBoton();
-			if (avatar)
+			if (Avatar)
 			{
-				adrian.ReconocerAmbiente(ambiente);
+				Adrian.ReconocerAmbiente(Ambiente);
 			}
 		}
 
         private void BotonCasa_Click(object sender, EventArgs e)
         {
-            boton = 2;
+            Boton = 2;
             SeleccionarBoton();
         }
 
 		private void PanelAmbiente_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
-			if (boton == 1 && !fin)
+			if (Boton == 1 && !Fin)
 			{
-				int[] coordenadas = adrian.Mover(xA, yA, e);
-				ambiente[xA, yA].Image = null;
-				if (casa)
+				int[] coordenadas = Adrian.Mover(XAvatar, YAvatar, e);
+				Ambiente[XAvatar, YAvatar].Image = null;
+				if (Casa)
 				{
-					if (coordenadas[0] == xC && coordenadas[1] == yC)
+					if (coordenadas[0] == XCasa && coordenadas[1] == YCasa)
 					{
-						fin = true;
+						Fin = true;
 						MessageBox.Show("Game Over");
 						BotonAvatar.Enabled = false;
 						BotonCasa.Enabled = false;
@@ -209,9 +213,9 @@ namespace AmbienteZelda
 						return;
 					}
 				}
-				ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
-				xA = coordenadas[0];
-				yA = coordenadas[1];
+				Ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
+				XAvatar = coordenadas[0];
+				YAvatar = coordenadas[1];
 			}
 		}
 

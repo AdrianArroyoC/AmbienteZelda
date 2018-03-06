@@ -62,5 +62,8 @@ namespace AmbienteZelda
             }
             return false;
         }
+
+		//Metodo para reconocer la llegada a la casa y detener el juego y quitar eso de la Ventana
+		//Clase padre para objetos con el metodo pintar y generar herencia
     }
 }
