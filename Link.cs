@@ -10,12 +10,13 @@ namespace AmbienteZelda
 {
     class Link
     {
-        private PictureBox[,] ambiente;
-        private int[] coordenadasCasa = new int[2];
+        private PictureBox[,] Ambiente {get; set;}
+        private int[] CoordenadasCasa {get; set;}
 
 		public Link(PictureBox[,] ambiente)
 		{
-			this.ambiente = ambiente;
+			this.Ambiente = ambiente;
+			CoordenadasCasa = new int[2];
 		}
 
         public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
@@ -27,7 +28,7 @@ namespace AmbienteZelda
                 {
                     coordenadas[1] -= 1;
                 }
-                if (e.KeyData == Keys.Down && y < this.ambiente.GetLength(1) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
+                if (e.KeyData == Keys.Down && y < Ambiente.GetLength(1) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
                 {
                     coordenadas[1] += 1;
                 }
@@ -35,7 +36,7 @@ namespace AmbienteZelda
                 {
                     coordenadas[0] -= 1;
                 }
-                if (e.KeyData == Keys.Right && x < this.ambiente.GetLength(0) - 1 && VerificarMovimiento(coordenadas[0] + 1, coordenadas[1]))
+                if (e.KeyData == Keys.Right && x < Ambiente.GetLength(0) - 1 && VerificarMovimiento(coordenadas[0] + 1, coordenadas[1]))
                 {
                     coordenadas[0] += 1;
                 }
@@ -45,18 +46,18 @@ namespace AmbienteZelda
 
 		public void ReconocerAmbiente(PictureBox[,] ambiente)
 		{
-			this.ambiente = ambiente;
+			Ambiente = ambiente;
 		}
 
 		public void ReconocerCasa(int x, int y)
 		{
-			coordenadasCasa[0] = x;
-			coordenadasCasa[1] = y;
+			CoordenadasCasa[0] = x;
+			CoordenadasCasa[1] = y;
 		}
 
 		private bool VerificarMovimiento(int x, int y)
         {
-            if  (ambiente[x, y].Image == null || (x == coordenadasCasa[0] && y == coordenadasCasa[1]))
+            if  (Ambiente[x, y].Image == null || (x == CoordenadasCasa[0] && y == CoordenadasCasa[1]))
             {
                 return true;
             }
