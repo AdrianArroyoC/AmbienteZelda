@@ -40,6 +40,7 @@
 			this.BotonCasa = new System.Windows.Forms.Button();
 			this.BotonAvatar = new System.Windows.Forms.Button();
 			this.BotonObstaculo = new System.Windows.Forms.Button();
+			this.BotonIniciar = new System.Windows.Forms.Button();
 			this.datos.SuspendLayout();
 			this.botones.SuspendLayout();
 			this.SuspendLayout();
@@ -101,7 +102,7 @@
 			this.BotonCrearCuadricula.Name = "BotonCrearCuadricula";
 			this.BotonCrearCuadricula.Size = new System.Drawing.Size(199, 28);
 			this.BotonCrearCuadricula.TabIndex = 2;
-			this.BotonCrearCuadricula.Text = "Empezar";
+			this.BotonCrearCuadricula.Text = "Generar";
 			this.BotonCrearCuadricula.UseVisualStyleBackColor = true;
 			this.BotonCrearCuadricula.Click += new System.EventHandler(this.BotonCrearCuadricula_Click);
 			// 
@@ -179,6 +180,17 @@
 			this.BotonObstaculo.UseVisualStyleBackColor = true;
 			this.BotonObstaculo.Click += new System.EventHandler(this.BotonObstaculo_Click);
 			// 
+			// BotonIniciar
+			// 
+			this.BotonIniciar.Location = new System.Drawing.Point(794, 285);
+			this.BotonIniciar.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonIniciar.Name = "BotonIniciar";
+			this.BotonIniciar.Size = new System.Drawing.Size(199, 28);
+			this.BotonIniciar.TabIndex = 3;
+			this.BotonIniciar.Text = "Iniciar";
+			this.BotonIniciar.UseVisualStyleBackColor = true;
+			this.BotonIniciar.Click += new System.EventHandler(this.BotonIniciar_Click);
+			// 
 			// Ventana
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -186,6 +198,7 @@
 			this.BackColor = System.Drawing.SystemColors.AppWorkspace;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.ClientSize = new System.Drawing.Size(1045, 647);
+			this.Controls.Add(this.BotonIniciar);
 			this.Controls.Add(this.botones);
 			this.Controls.Add(this.datos);
 			this.Controls.Add(this.PanelAmbiente);
@@ -216,6 +229,7 @@
         private System.Windows.Forms.Button BotonCasa;
         private System.Windows.Forms.Button BotonAvatar;
         private System.Windows.Forms.Button BotonObstaculo;
-    }
+		private System.Windows.Forms.Button BotonIniciar;
+	}
 }
 

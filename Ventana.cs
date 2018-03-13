@@ -40,6 +40,9 @@ namespace AmbienteZelda
 			{
 				CuadrosEnY = Convert.ToInt32(CajaCuadrosY.Text);
 				CuadrosEnX = Convert.ToInt32(CajaCuadrosX.Text);
+				BotonCasa.Enabled = false;
+				BotonObstaculo.Enabled = false;
+				Casa = false;
 				if (CuadrosEnY >= 10 && CuadrosEnY <= 100 && CuadrosEnX >= 10 && CuadrosEnX <= 100)
 				{
 					PanelAmbiente.Width = 500;
@@ -58,8 +61,8 @@ namespace AmbienteZelda
 						{
 							PictureBox CajaImagen = new PictureBox
 							{
-								Location = new System.Drawing.Point(i * a - a, j * l - l),
-								Size = new System.Drawing.Size(a, l),
+								Location = new Point(i * a - a, j * l - l),
+								Size = new Size(a, l),
 								BorderStyle = BorderStyle.None,
 								Name = "CajaImagen" + (i - 1).ToString() + "-" + (j - 1).ToString() + "",
 								BackColor = Color.Transparent,
@@ -115,7 +118,8 @@ namespace AmbienteZelda
 					XAvatar = x;
 					YAvatar = y;
 					Adrian = new Link(Ambiente);
-					CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
+					Adrian.Mover(XAvatar, YAvatar);
+					//CajaImagen.Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
 					Avatar = true;
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
@@ -222,6 +226,11 @@ namespace AmbienteZelda
 		private void PanelAmbiente_Paint(object sender, PaintEventArgs e)
 		{
 			ControlPaint.DrawBorder(e.Graphics, PanelAmbiente.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
+		}
+
+		private void BotonIniciar_Click(object sender, EventArgs e)
+		{
+			Adrian.LineaBresenham(XAvatar, YAvatar, XCasa, YCasa);
 		}
 	}
 }
