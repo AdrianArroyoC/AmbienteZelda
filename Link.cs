@@ -19,7 +19,8 @@ namespace AmbienteZelda
 			CoordenadasCasa = new int[2];
 		}
 
-        public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
+		//public void Mover(int x, int y, PreviewKeyDownEventArgs e = null)
+		public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
         {
             int[] coordenadas = {x, y};
             if (e != null)
@@ -41,7 +42,18 @@ namespace AmbienteZelda
                     coordenadas[0] += 1;
                 }
             }
-            return coordenadas;
+			Ambiente[x, y].Image = null;
+			if (CoordenadasCasa != null && EncontroCasa(x, CoordenadasCasa[0], y, CoordenadasCasa[1]))
+			{
+				MessageBox.Show(CoordenadasCasa[0].ToString() + CoordenadasCasa[1].ToString());
+				coordenadas[0] = 101;
+				coordenadas[1] = 101;
+			}
+			else
+			{
+				Ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
+			}
+			return coordenadas;
         }
 
 		public void ReconocerAmbiente(PictureBox[,] ambiente)
@@ -63,5 +75,83 @@ namespace AmbienteZelda
             }
             return false;
         }
+
+		public bool EncontroCasa(int x1, int y1, int x2, int y2)
+		{
+			if (x1 == x2 && y1 == y2)
+			{
+				MessageBox.Show("Game Over");
+				return true;
+			}
+			return false;
+		}
+
+		public void LineaBresenham(int x1, int y1, int x2, int y2)
+		{
+			//Variables de distancia
+			int dX = (x2 - x1);
+			int dY = (y2 - y1);
+			int incXi;
+			int incYi;
+			int incXr;
+			int incYr;
+			//Incrementos en las secciones con avance inclinado
+			if (dX >= 0)
+			{
+				incXi = 1;
+			}
+			else
+			{
+				dX = -dX;
+				incXi = -1;
+			}
+			if (dY >= 0)
+			{
+				incYi = 1;
+			}
+			else
+			{
+				dY = -dY;
+				incYi = -1;
+			}
+			//Incrementos en las secciones de avance recto
+			if (dX >= dY)
+			{
+				incYr = 0;
+				incXr = incXi;
+			}
+			else
+			{
+				incXr = 0;
+				incYr = incYi;
+				//Intercambio
+				int k = dX;
+				dX = dY;
+				dY = k;
+			}
+			//Inicializar valores
+			int x = x1;
+			int y = y1;
+			int avR = 2 * dY;
+			int av = avR - dX;
+			int avI = av - dX;
+			//Ciclo para el trazado de las lineas
+			while (EncontroCasa(x, x2, y, y2))
+			{
+				if (av >= 0)
+				{
+					x = x + incXi;
+					y = y + incYi;
+					av = av + avI;
+				}
+				else
+				{
+					x = x + incXr;
+					y = y + incYr;
+					av = av + avR;
+				}
+				Mover(x, y);
+			}
+		}
     }
 }
