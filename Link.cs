@@ -22,31 +22,31 @@ namespace AmbienteZelda
 			EnCasa = false;
 		}
 
-        public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
-        {
-            int[] coordenadas = {x, y};
-            if (e != null)
-            {
-                if (e.KeyData == Keys.Up && y > 0 && VerificarMovimiento(coordenadas[0], coordenadas[1] - 1))
-                {
-                    coordenadas[1] -= 1;
-                }
-                if (e.KeyData == Keys.Down && y < Ambiente.GetLength(1) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
-                {
-                    coordenadas[1] += 1;
-                }
-                if (e.KeyData == Keys.Left && x > 0 && VerificarMovimiento(coordenadas[0] - 1, coordenadas[1]))
-                {
-                    coordenadas[0] -= 1;
-                }
-                if (e.KeyData == Keys.Right && x < Ambiente.GetLength(0) - 1 && VerificarMovimiento(coordenadas[0] + 1, coordenadas[1]))
-                {
-                    coordenadas[0] += 1;
-                }
-            }
+		public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
+		{
+			int[] coordenadas = { x, y };
+			if (e != null)
+			{
+				if (e.KeyData == Keys.Up && y > 0 && VerificarMovimiento(coordenadas[0], coordenadas[1] - 1))
+				{
+					coordenadas[1] -= 1;
+				}
+				if (e.KeyData == Keys.Down && y < Ambiente.GetLength(1) - 1 && VerificarMovimiento(coordenadas[0], coordenadas[1] + 1))
+				{
+					coordenadas[1] += 1;
+				}
+				if (e.KeyData == Keys.Left && x > 0 && VerificarMovimiento(coordenadas[0] - 1, coordenadas[1]))
+				{
+					coordenadas[0] -= 1;
+				}
+				if (e.KeyData == Keys.Right && x < Ambiente.GetLength(0) - 1 && VerificarMovimiento(coordenadas[0] + 1, coordenadas[1]))
+				{
+					coordenadas[0] += 1;
+				}
+			}
 			Ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile(RutaImagen);
 			return coordenadas;
-        }
+		}
 
 		public void ReconocerAmbiente(PictureBox[,] ambiente)
 		{
@@ -119,8 +119,6 @@ namespace AmbienteZelda
 				dY = k;
 			}
 			//Inicializar valores
-			//int x = x1;
-			//int y = y1;
 			coordenadas[0] = x1;
 			coordenadas[1] = y1;
 			int avR = 2 * dY;
@@ -129,7 +127,6 @@ namespace AmbienteZelda
 			//Ciclo para el trazado de las lineas
 			while (coordenadas[0] != x2 || coordenadas[1] != y2)
 			{
-				//Mover(coordenadas[0], coordenadas[1]);
 				//Application.DoEvents();
 				//Thread.Sleep(1000);
 				Mover(coordenadas[0], coordenadas[1]);
@@ -151,6 +148,7 @@ namespace AmbienteZelda
 					MessageBox.Show("Ya no se puede avanzar");
 					break;
 				}
+				//LineaBresenham(coordenadas[0], coordenadas[1], x2, y2);
 			}
 			EnCasa = true;
 		}
