@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading; //
+using System.Threading; 
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AmbienteZelda
 {
     class Link
-    {
-        private PictureBox[,] Ambiente {get; set;}
-        private int[] CoordenadasCasa {get; set;}
+    {	
+        private PictureBox[,] Ambiente { get; set; } 
+        private int[] CoordenadasCasa { get; set; } 
+		private string RutaImagen { get; set; } 
+		public bool EnCasa { get; set; } 
 
-		public Link(PictureBox[,] ambiente)
+		public Link(string rutaImagen)
 		{
-			this.Ambiente = ambiente;
+			RutaImagen = rutaImagen;
+			EnCasa = false;
 		}
 
         public int[] Mover(int x, int y, PreviewKeyDownEventArgs e = null)
         {
-			//Ambiente[x, y].Image = null;
             int[] coordenadas = {x, y};
             if (e != null)
             {
@@ -42,7 +44,7 @@ namespace AmbienteZelda
                     coordenadas[0] += 1;
                 }
             }
-			Ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg");
+			Ambiente[coordenadas[0], coordenadas[1]].Image = Image.FromFile(RutaImagen);
 			return coordenadas;
         }
 
@@ -60,11 +62,16 @@ namespace AmbienteZelda
 
 		private bool VerificarMovimiento(int x, int y)
         {
-            if  (Ambiente[x, y].Image == null || (x == CoordenadasCasa[0] && y == CoordenadasCasa[1]))
+            if  (Ambiente[x, y].Image == null)
             {
                 return true;
-            }
-            return false;
+            } 
+			if (x == CoordenadasCasa[0] && y == CoordenadasCasa[1])
+			{
+				EnCasa = true;
+				return EnCasa;
+			}
+			return false;
         }
 
 		public void LineaBresenham(int x1, int y1, int x2, int y2)
@@ -120,11 +127,12 @@ namespace AmbienteZelda
 			int av = avR - dX;
 			int avI = av - dX;
 			//Ciclo para el trazado de las lineas
-			Ambiente[coordenadas[0], coordenadas[1]].Image = null;
 			while (coordenadas[0] != x2 || coordenadas[1] != y2)
 			{
-				Application.DoEvents();
-				Thread.Sleep(1000);
+				//Mover(coordenadas[0], coordenadas[1]);
+				//Application.DoEvents();
+				//Thread.Sleep(1000);
+				Mover(coordenadas[0], coordenadas[1]);
 				Ambiente[coordenadas[0], coordenadas[1]].Image = null;
 				if (av >= 0 && VerificarMovimiento(coordenadas[0] + incXi, coordenadas[1] + incYi))
 				{
@@ -140,11 +148,11 @@ namespace AmbienteZelda
 				}
 				else 
 				{
+					MessageBox.Show("Ya no se puede avanzar");
 					break;
 				}
-				Mover(coordenadas[0], coordenadas[1]);
 			}
-			Mover(coordenadas[0], coordenadas[1]);
+			EnCasa = true;
 		}
 	}
 }
