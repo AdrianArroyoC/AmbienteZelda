@@ -1,72 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace AmbienteZelda
 {
     public partial class Ventana : Form 
     {
-		private PictureBox[,] Ambiente { get; set; }
-		private Link Adrian { get; set; }
-        private int CuadrosEnX { get; set; }
-		private int CuadrosEnY { get; set; }
-		private int XAvatar { get; set; }
-		private int YAvatar { get; set; }
-        private int XCasa { get; set; }
-		private int YCasa { get; set; }
-		private int Boton { get; set; }
-		private bool Fin { get; set; }
-		private bool Avatar { get; set; }
-		private bool Casa { get; set; }
 		private readonly String rutaImagenAvatar = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg";
 		private readonly String rutaImagenCasa = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.jpg";
 		private readonly String rutaImagenArbol = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Arbol.jpg";
-		private string RutaArchivo { get; set; }
+		private readonly String rutaImagenFin = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\CasaLink.jpg";
+		private readonly String rutaFondo = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg";
+		private int CuadrosX { get; set; }
+		private int CuadrosY { get; set; }
+		private int Modo { get; set; } //0=Obstaculos, 1=Avatar y 2=Meta
+		private bool Fin { get; set; }
+		public static PictureBox[,] Ambiente { get; set; }
+        public static Avatar Link { get; set; }
+		public static Meta Casa { get; set; }
 
 		public Ventana()
         {
             InitializeComponent();
-			Boton = 1;
-			Avatar = false;
-			Casa = false;
-			Fin = false;
         }
 
-		public void CrearCuadricula(bool[,] ObstaculosAmbiente = null)
+		public void CrearCuadricula(bool[,] Obstaculos = null)
 		{
+			//Restablecemos el tamaño original del ambiente y calculamos el nuevo tamaño en base a los cuadros
 			PanelAmbiente.Width = 500;
 			PanelAmbiente.Height = 500;
 			PanelAmbiente.Controls.Clear();
-			PanelAmbiente.BackgroundImage = Image.FromFile("D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg");
-			Avatar = false;
+			int xCuadro = PanelAmbiente.Width / CuadrosX;
+			int yCuadro = PanelAmbiente.Height / CuadrosY;
+			PanelAmbiente.Width = CuadrosX * xCuadro;
+			PanelAmbiente.Height = CuadrosY * yCuadro;
+			PanelAmbiente.BackgroundImage = Image.FromFile(rutaFondo);
 			BotonCasa.Enabled = false;
 			BotonObstaculo.Enabled = false;
-			Casa = false;
-			Ambiente = new PictureBox[CuadrosEnX, CuadrosEnY];
-			int a = PanelAmbiente.Width / CuadrosEnX;
-			int l = PanelAmbiente.Height / CuadrosEnY;
-			PanelAmbiente.Width = CuadrosEnX * a;
-			PanelAmbiente.Height = CuadrosEnY * l;
-			for (int i = 1; i <= CuadrosEnX; i++)
+			BotonAvatar.Enabled = true;
+			BotonGuardar.Enabled = true;
+			Text = "Prueba 1 - Nuevo";
+			Link = null;
+			Casa = null;
+			Modo = 1;
+			Fin = false;
+			//Creamos el ambiente y sus cuadros
+			Ambiente = new PictureBox[CuadrosX, CuadrosY];
+			for (int i = 1; i <= CuadrosX; i++)
 			{
-				for (int j = 1; j <= CuadrosEnY; j++)
+				for (int j = 1; j <= CuadrosY; j++)
 				{
 					PictureBox CajaImagen = new PictureBox
 					{
-						Location = new Point(i * a - a, j * l - l),
-						Size = new Size(a, l),
+						Location = new Point(i * xCuadro - xCuadro, j * yCuadro - yCuadro),
+						Size = new Size(xCuadro, yCuadro),
 						BorderStyle = BorderStyle.None,
 						Name = "CajaImagen" + (i - 1).ToString() + "-" + (j - 1).ToString() + "",
 						BackColor = Color.Transparent,
@@ -78,21 +69,20 @@ namespace AmbienteZelda
 					PanelAmbiente.Controls.Add(CajaImagen);
 				}
 			}
-			if (ObstaculosAmbiente != null)
+			//Para la carga de obstaculos //Revisar si se puede arriba
+			if (Obstaculos != null)
 			{
-				for (int i = 0; i < CuadrosEnX; i++)
+				for (int i = 0; i < CuadrosX; i++)
 				{
-					for (int j = 0; j < CuadrosEnY; j++)
+					for (int j = 0; j < CuadrosY; j++)
 					{
-						if (ObstaculosAmbiente[i, j] == true)
+						if (Obstaculos[i, j] == true)
 						{
 							Ambiente[i, j].Image = Image.FromFile(rutaImagenArbol);
 						}
 					}
 				}
 			}
-			BotonAvatar.Enabled = true;
-			BotonGuardar.Enabled = true;
 			SeleccionarBoton();
 		}
         
@@ -100,12 +90,10 @@ namespace AmbienteZelda
         {
 			if (CajaCuadrosX.Text != "" && CajaCuadrosY.Text != "")
 			{
-				CuadrosEnY = Convert.ToInt32(CajaCuadrosY.Text);
-				CuadrosEnX = Convert.ToInt32(CajaCuadrosX.Text);
-				if (CuadrosEnY >= 10 && CuadrosEnY <= 100 && CuadrosEnX >= 10 && CuadrosEnX <= 100)
+				CuadrosY = Convert.ToInt32(CajaCuadrosY.Text);
+				CuadrosX = Convert.ToInt32(CajaCuadrosX.Text);
+				if (CuadrosY >= 10 && CuadrosY <= 100 && CuadrosX >= 10 && CuadrosX <= 100)
 				{
-					this.Text = "Prueba 1 - Nuevo";
-					Boton = 1;
 					CrearCuadricula();
 				}
 				else
@@ -133,7 +121,7 @@ namespace AmbienteZelda
 				string[] coordenadas = CajaImagen.Name.Replace("CajaImagen", "").Split('-');
 				int x = Convert.ToInt32(coordenadas[0]);
 				int y = Convert.ToInt32(coordenadas[1]);
-				if (Boton == 0)
+				if (Modo == 0)
 				{
 					if (e.Button == MouseButtons.Left && CajaImagen.Image == null)
 					{
@@ -143,27 +131,21 @@ namespace AmbienteZelda
 					{
 						CajaImagen.Image = null;
 					}
+					Text = Text.Replace(" *","") + " *";
 				}
-				else if (this.Boton == 1 && this.Avatar == false && CajaImagen.Image == null)
+				else if (Modo == 1 && Link == null && CajaImagen.Image == null)
 				{
-					XAvatar = x;
-					YAvatar = y;
-					Adrian = new Link(rutaImagenAvatar);
-					Adrian.ReconocerAmbiente(Ambiente);
-					Adrian.Mover(XAvatar, YAvatar);
-					Avatar = true;
+					Link = new Avatar(x, y, rutaImagenAvatar);
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
+					Text = Text.Replace(" *","") + " *";
 				}
-				else if (Boton == 2 && Casa == false && CajaImagen.Image == null)
+				else if (Modo == 2 && Casa == null && CajaImagen.Image == null)
 				{
-					CajaImagen.Image = Image.FromFile(rutaImagenCasa);
-					Casa = true;
+					Casa = new Meta(x, y, rutaImagenCasa);
 					BotonLineaRecta.Enabled = true;
-					Adrian.ReconocerCasa(x, y);
-					XCasa = x;
-					YCasa = y;
 					BotonObstaculo.Enabled = true;
+					Text = Text.Replace(" *","") + " *";
 				}
 			}
 		}
@@ -193,16 +175,16 @@ namespace AmbienteZelda
 			BotonCasa.FlatStyle = FlatStyle.Popup;
 			if (!Fin)
 			{
-				if (Boton == 0)
+				if (Modo == 0)
 				{
 					BotonObstaculo.FlatStyle = FlatStyle.Standard;
 				}
-				else if (Boton == 1)
+				else if (Modo == 1)
 				{
 					BotonAvatar.FlatStyle = FlatStyle.Standard;
 					PanelAmbiente.Focus();
 				}
-				else if (Boton == 2)
+				else if (Modo == 2)
 				{
 					BotonCasa.FlatStyle = FlatStyle.Standard;
 				}
@@ -211,51 +193,48 @@ namespace AmbienteZelda
 		
         private void BotonObstaculo_Click(object sender, EventArgs e)
         {
-            Boton = 0;
+            Modo = 0;
             SeleccionarBoton();
         }
 
         private void BotonAvatar_Click(object sender, EventArgs e)
         {
-            Boton = 1;
+            Modo = 1;
             SeleccionarBoton();
-			if (Avatar)
-			{
-				Adrian.ReconocerAmbiente(Ambiente);
-			}
 		}
 
         private void BotonCasa_Click(object sender, EventArgs e)
         {
-            Boton = 2;
+            Modo = 2;
             SeleccionarBoton();
         }
 
 		private void PanelAmbiente_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
-			if (Boton == 1 && !Fin)
+			if (Modo == 1 && !Fin)
 			{
-				int[] coordenadas = Adrian.Mover(XAvatar, YAvatar, e);
-				Ambiente[XAvatar, YAvatar].Image = null;
-				if (Casa)
+				Ambiente[Link.X, Link.Y].Image = null;
+				Link.Mover(e);
+				if (Casa != null)
 				{
-					if (Adrian.EnCasa)
+					if (Link.EnCasa)
 					{
 						BloquearEscenario();
 						return;
 					}
 				}
-				XAvatar = coordenadas[0];
-				YAvatar = coordenadas[1];
 			}
+			//Se puede solucionar con un true en Avatar.Mover
+			Text = Text.Replace(" *","") + " *";
 		}
 
-		private void BloquearEscenario()
+		public void BloquearEscenario()
 		{
 			BotonAvatar.Enabled = false;
 			BotonCasa.Enabled = false;
 			BotonObstaculo.Enabled = false;
 			BotonLineaRecta.Enabled = false;
+			Ambiente[Casa.X, Casa.Y].Image = Image.FromFile(rutaImagenFin);
 			MessageBox.Show("Game Over");
 		}
 
@@ -266,8 +245,8 @@ namespace AmbienteZelda
 
 		private void BotonLineaRecta_Click(object sender, EventArgs e)
 		{
-			Adrian.LineaBresenham(XAvatar, YAvatar, XCasa, YCasa);
-			if (Adrian.EnCasa)
+			Link.LineaBresenhamAsync();
+			if (Link.EnCasa)
 			{
 				BloquearEscenario();
 			}
@@ -283,34 +262,34 @@ namespace AmbienteZelda
 			if (dialogoGuardarArchivo.ShowDialog() == DialogResult.OK)
 			{
 				//Preparamos el objeto a guardar
-				bool[,] ObstaculosAmbiente = new bool[CuadrosEnX, CuadrosEnY];
-				for (int i = 1; i < CuadrosEnX; i++)
+				bool[,] Obstaculos = new bool[CuadrosX, CuadrosY];
+				for (int i = 0; i < CuadrosX; i++)
 				{
-					for (int j = 1; j < CuadrosEnY; j++)
+					for (int j = 0; j < CuadrosY; j++)
 					{
-						if (Ambiente[i, j].Image != null && (i != XAvatar && j != YAvatar) && (i != XCasa && j != YCasa))
+						if (Ambiente[i, j].Image != null) // && (i != Link.X && j != Link.Y) && (i != Casa.X && j != Casa.Y)
 						{
-							ObstaculosAmbiente[i, j] = true;
+							Obstaculos[i, j] = true;
 						}
 						else
 						{
-							ObstaculosAmbiente[i, j] = false;
+							Obstaculos[i, j] = false;
 						}
 					}
 				}
-				Mapa mapa = new Mapa(CuadrosEnX, CuadrosEnY, XAvatar, YAvatar, XCasa, YCasa, Boton, Fin, Avatar, Casa, ObstaculosAmbiente);
+				Partida partida = new Partida(CuadrosX, CuadrosY, Modo, Fin, Obstaculos, Link, Casa);
 				//Realizamos el guardado
 				byte[] arregloBytes = new byte[1000000]; //1Mb
 				IFormatter formateador = new BinaryFormatter();
-				Stream flujo = new MemoryStream(arregloBytes, true);
-				formateador.Serialize(flujo, mapa);
-				flujo.Close();
-				RutaArchivo = dialogoGuardarArchivo.FileName.ToString();
+				Stream transferencia = new MemoryStream(arregloBytes, true);
+				formateador.Serialize(transferencia, partida);
+				transferencia.Close();
+				string RutaArchivo = dialogoGuardarArchivo.FileName.ToString();
 				FileStream archivo = File.Create(RutaArchivo);
 				archivo.Write(arregloBytes, 0, arregloBytes.Length);
 				archivo.Close();
 				MessageBox.Show("Ambiente guardado");
-				this.Text = "Prueba 1 - " + RutaArchivo;
+				Text = "Prueba 1 - " + RutaArchivo;
 			}
 		}
 
@@ -324,45 +303,41 @@ namespace AmbienteZelda
 			if (dialogoAbrirArchivo.ShowDialog() == DialogResult.OK)
 			{
 				//Realizamos la lectura
-				RutaArchivo = dialogoAbrirArchivo.FileName.ToString();
+				string RutaArchivo = dialogoAbrirArchivo.FileName.ToString();
 				FileStream archivo = File.Open(RutaArchivo, FileMode.Open, FileAccess.Read);
 				byte[] arregloBytes = new byte[1000000];
 				archivo.Read(arregloBytes, 0, arregloBytes.Length);
 				archivo.Close();
 				IFormatter formateador = new BinaryFormatter();
-				Stream flujo = new MemoryStream(arregloBytes, true);
-				Mapa mapa = (Mapa)formateador.Deserialize(flujo);
-				flujo.Close();
+				Stream transferencia = new MemoryStream(arregloBytes, true);
+				Partida partida = (Partida)formateador.Deserialize(transferencia);
+				transferencia.Close();
 				//Preparamos los datos a cargar
-				CuadrosEnX = mapa.CX;
-				CuadrosEnY = mapa.CY;
-				CajaCuadrosX.Text = CuadrosEnX.ToString();
-				CajaCuadrosY.Text = CuadrosEnY.ToString();
-				XAvatar = mapa.XA;
-				YAvatar = mapa.YA;
-				XCasa = mapa.XC;
-				YCasa = mapa.YC;
-				Boton = mapa.B;
-				CrearCuadricula(mapa.OA);
-				Avatar = mapa.A;
-				if (Avatar)
+				CuadrosX = partida.CX;
+				CuadrosY = partida.CY;
+				Modo = partida.M;
+				Fin = partida.F;
+				CrearCuadricula(partida.O);
+				Link = partida.L;
+				Casa = partida.C;
+				if (Link != null)
 				{
-					Ambiente[XAvatar, YAvatar].Image = Image.FromFile(rutaImagenAvatar);
+					Link.Colocar();
 					BotonCasa.Enabled = true;
 				}
-				Casa = mapa.C;
-				if (Casa)
+				if (Casa != null)
 				{
-					Ambiente[XCasa, YCasa].Image = Image.FromFile(rutaImagenCasa);
+					Casa.Colocar();
 					BotonObstaculo.Enabled = true;
 					BotonLineaRecta.Enabled = true;
 				}
-				Fin = mapa.F;
+				CajaCuadrosX.Text = CuadrosX.ToString();
+				CajaCuadrosY.Text = CuadrosY.ToString();
 				if (Fin)
 				{
 					BloquearEscenario();
 				}
-				this.Text = "Prueba 1" + RutaArchivo;
+				Text = "Prueba 1 - " + RutaArchivo;
 			}
 		}
 	}

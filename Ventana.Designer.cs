@@ -43,8 +43,8 @@
 			this.BotonLineaRecta = new System.Windows.Forms.Button();
 			this.movimientoCajaAgrupacion = new System.Windows.Forms.GroupBox();
 			this.guardarCajaAgrupacion = new System.Windows.Forms.GroupBox();
-			this.BotonGuardar = new System.Windows.Forms.Button();
 			this.BotonCargar = new System.Windows.Forms.Button();
+			this.BotonGuardar = new System.Windows.Forms.Button();
 			this.datosCajaAgrupacion.SuspendLayout();
 			this.modalidadesCajaAgrupacion.SuspendLayout();
 			this.movimientoCajaAgrupacion.SuspendLayout();
@@ -219,6 +219,17 @@
 			this.guardarCajaAgrupacion.TabStop = false;
 			this.guardarCajaAgrupacion.Text = "Guardar/Cargar";
 			// 
+			// BotonCargar
+			// 
+			this.BotonCargar.Location = new System.Drawing.Point(99, 58);
+			this.BotonCargar.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonCargar.Name = "BotonCargar";
+			this.BotonCargar.Size = new System.Drawing.Size(199, 28);
+			this.BotonCargar.TabIndex = 5;
+			this.BotonCargar.Text = "Cargar";
+			this.BotonCargar.UseVisualStyleBackColor = true;
+			this.BotonCargar.Click += new System.EventHandler(this.BotonCargar_Click);
+			// 
 			// BotonGuardar
 			// 
 			this.BotonGuardar.Enabled = false;
@@ -230,17 +241,6 @@
 			this.BotonGuardar.Text = "Guardar";
 			this.BotonGuardar.UseVisualStyleBackColor = true;
 			this.BotonGuardar.Click += new System.EventHandler(this.BotonGuardar_Click);
-			// 
-			// BotonCargar
-			// 
-			this.BotonCargar.Location = new System.Drawing.Point(99, 58);
-			this.BotonCargar.Margin = new System.Windows.Forms.Padding(4);
-			this.BotonCargar.Name = "BotonCargar";
-			this.BotonCargar.Size = new System.Drawing.Size(199, 28);
-			this.BotonCargar.TabIndex = 5;
-			this.BotonCargar.Text = "Cargar";
-			this.BotonCargar.UseVisualStyleBackColor = true;
-			this.BotonCargar.Click += new System.EventHandler(this.BotonCargar_Click);
 			// 
 			// Ventana
 			// 

@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AmbienteZelda.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -46,14 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mapa.cs" />
+    <Compile Include="Partida.cs" />
+    <Compile Include="Meta.cs" />
+    <Compile Include="Objeto.cs" />
     <Compile Include="Ventana.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Ventana.Designer.cs">
       <DependentUpon>Ventana.cs</DependentUpon>
     </Compile>
-    <Compile Include="Link.cs" />
+    <Compile Include="Avatar.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Ventana.resx">
@@ -85,6 +90,7 @@
   <ItemGroup>
     <Content Include="src\Arbol.jpg" />
     <Content Include="src\Casa.jpg" />
+    <Content Include="src\CasaLink.jpg" />
     <Content Include="src\Fondo1.jpg" />
     <Content Include="src\Fondo2.jpg" />
     <Content Include="src\Icono.ico" />
