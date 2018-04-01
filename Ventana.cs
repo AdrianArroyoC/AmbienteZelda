@@ -14,12 +14,15 @@ namespace AmbienteZelda
 		private readonly String rutaImagenCasa = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.jpg";
 		private readonly String rutaImagenArbol = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Arbol.jpg";
 		private readonly String rutaImagenFin = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\CasaLink.jpg";
+		private readonly String rutaImagenAux1 = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\LinkAzul.jpg";
+		private readonly String rutaImagenAux2 = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\LinkRojo.jpg";
 		private readonly String rutaFondo = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg";
 		private int CuadrosX { get; set; }
 		private int CuadrosY { get; set; }
 		private int Modo { get; set; } //0=Obstaculos, 1=Avatar y 2=Meta
 		private bool Fin { get; set; }
 		public static PictureBox[,] Ambiente { get; set; }
+		private int[,] AmbienteAvatar{ get; set; }
         public static Avatar Link { get; set; }
 		public static Meta Casa { get; set; }
 
@@ -50,6 +53,7 @@ namespace AmbienteZelda
 			Fin = false;
 			//Creamos el ambiente y sus cuadros
 			Ambiente = new PictureBox[CuadrosX, CuadrosY];
+			AmbienteAvatar = new int[CuadrosX, CuadrosY];
 			for (int i = 1; i <= CuadrosX; i++)
 			{
 				for (int j = 1; j <= CuadrosY; j++)
@@ -67,6 +71,7 @@ namespace AmbienteZelda
 					CajaImagen.Paint += CajaImagen_Paint;
 					Ambiente[i - 1, j - 1] = CajaImagen;
 					PanelAmbiente.Controls.Add(CajaImagen);
+					AmbienteAvatar[i - 1, j - 1] = -2;
 				}
 			}
 			//Para la carga de obstaculos //Revisar si se puede arriba
@@ -135,7 +140,7 @@ namespace AmbienteZelda
 				}
 				else if (Modo == 1 && Link == null && CajaImagen.Image == null)
 				{
-					Link = new Avatar(x, y, rutaImagenAvatar);
+					Link = new Avatar(x, y, rutaImagenAvatar, rutaImagenAux1, rutaImagenAux2, AmbienteAvatar);
 					BotonCasa.Enabled = true;
 					PanelAmbiente.Focus();
 					Text = Text.Replace(" *","") + " *";
@@ -243,9 +248,9 @@ namespace AmbienteZelda
 			ControlPaint.DrawBorder(e.Graphics, PanelAmbiente.ClientRectangle, Color.Black, ButtonBorderStyle.Solid);
 		}
 
-		private void BotonLineaRecta_Click(object sender, EventArgs e)
+		private async void BotonLineaRecta_Click(object sender, EventArgs e)
 		{
-			Link.LineaBresenhamAsync();
+			await Link.LineaBresenhamAsync();
 			if (Link.EnCasa)
 			{
 				BloquearEscenario();

@@ -95,6 +95,8 @@
     <Content Include="src\Fondo2.jpg" />
     <Content Include="src\Icono.ico" />
     <Content Include="src\Link.jpg" />
+    <Content Include="src\LinkAzul.jpg" />
+    <Content Include="src\LinkRojo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
