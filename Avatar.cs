@@ -215,7 +215,7 @@ namespace AmbienteZelda
 					av = av + avR;
 					UltimoMovimiento = 0;
 				}
-				else if (Mover(dX, dY))
+				else if (Mover(dX, dY)) //Se mueve al otro eje en la dirección de la linea
 				{
 					//ReCalcular
 					variablesDistancia = CalcularLineaBresenham();
@@ -289,7 +289,7 @@ namespace AmbienteZelda
 
 		public void ReconocerAmbiente(int x, int y, bool imagen = false)
 		{
-			if (y > 0) //!(x == X && Y == y - 1)
+			if (y > 0) 
 			{
 				if (VerificarMovimiento(x, y - 1))
 				{
@@ -309,7 +309,7 @@ namespace AmbienteZelda
 					AmbienteAvatar[x, y - 1] = -1;
 				}
 			}
-			if (y < Ventana.Ambiente.GetLength(1) - 1) //!(x == X && Y == y + 1)
+			if (y < Ventana.Ambiente.GetLength(1) - 1) 
 			{
 				if (VerificarMovimiento(x, y + 1))
 				{
@@ -329,7 +329,7 @@ namespace AmbienteZelda
 					AmbienteAvatar[x, y + 1] = -1;
 				}
 			}
-			if (x > 0) //!(x - 1 == X && Y == y)
+			if (x > 0) 
 			{
 				if (VerificarMovimiento(x - 1, y))
 				{
@@ -349,7 +349,7 @@ namespace AmbienteZelda
 					AmbienteAvatar[x - 1, y] = -1;
 				}
 			}
-			if (x < Ventana.Ambiente.GetLength(0) - 1)  //!(x + 1 == X && Y == y)
+			if (x < Ventana.Ambiente.GetLength(0) - 1)  
 			{
 				if (VerificarMovimiento(x + 1, y))
 				{
