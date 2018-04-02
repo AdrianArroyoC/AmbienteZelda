@@ -10,6 +10,7 @@ namespace AmbienteZelda
     {
 		public bool EnCasa { get; set; }
 		private int ContadorPasos { get; set; }
+		private int UltimoMovimiento { get; set; }
 		private string RutaImagenAux1 { get; set; }
 		private string RutaImagenAux2 { get; set; }
 		private int[,] AmbienteAvatar { get; set; }
@@ -21,27 +22,88 @@ namespace AmbienteZelda
 			RutaImagenAux2 = rutaImagenAux2;
 			AmbienteAvatar = ambienteAvatar;
 			ContadorPasos = 0;
+			UltimoMovimiento = 0;
 		}
 
 		public void Mover(PreviewKeyDownEventArgs e) 
 		{
-			if (e.KeyData == Keys.Up && Y > 0 && VerificarMovimiento(X, Y - 1)) 
+			if (e.KeyData == Keys.Up) 
 			{
-				Y -= 1; //MoverArriba()
+				MoverArriba();
 			}
-			if (e.KeyData == Keys.Down && Y < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(X, Y + 1)) 
+			if (e.KeyData == Keys.Down) 
 			{
-				Y += 1; //MoverAbajo()
+				MoverAbajo();
 			}
-			if (e.KeyData == Keys.Left && X > 0 && VerificarMovimiento(X - 1, Y))
+			if (e.KeyData == Keys.Left)
 			{
-				X -= 1; //MoverIzquierda()
+				MoverIzquierda();
 			}
-			if (e.KeyData == Keys.Right && X < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(X + 1, Y)) 
+			if (e.KeyData == Keys.Right) 
 			{
-				X += 1; //MoverDerecha()
+				MoverDerecha();
 			}
 			Colocar();
+		}
+
+		private bool MoverArriba(bool verificarAmbienteAvatar = false)
+		{
+			if (Y > 0 && VerificarMovimiento(X, Y - 1))
+			{
+				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y - 1] < 0)
+				{
+					return false;
+				}
+				Y -= 1;
+				UltimoMovimiento = 1;
+				return true;
+			}
+			return false;
+		}
+
+		private bool MoverAbajo(bool verificarAmbienteAvatar = false)
+		{
+			if (Y < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(X, Y + 1))
+			{
+				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y + 1] < 0)
+				{
+					return false;
+				}
+				Y += 1;
+				UltimoMovimiento = 2;
+				return true;
+			}
+			return false;
+		}
+
+		private bool MoverIzquierda(bool verificarAmbienteAvatar = false)
+		{
+			if (X > 0 && VerificarMovimiento(X - 1, Y))
+			{
+				if (verificarAmbienteAvatar && AmbienteAvatar[X - 1, Y] < 0)
+				{
+					return false;
+				}
+				X -= 1;
+				UltimoMovimiento = 3;
+				return true;
+			}
+			return false;
+		}
+
+		private bool MoverDerecha(bool verificarAmbienteAvatar = false)
+		{
+			if (X < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(X + 1, Y))
+			{
+				if (verificarAmbienteAvatar && AmbienteAvatar[X + 1, Y] < 0)
+				{
+					return false;
+				}
+				X += 1;
+				UltimoMovimiento = 4;
+				return true;
+			}
+			return false;
 		}
 
 		private bool VerificarMovimiento(int x, int y)
@@ -63,124 +125,217 @@ namespace AmbienteZelda
 			Ventana.Ambiente[X, Y].Image = null;
 		}
 
+		public int[] CalcularLineaBresenham()
+		{
+			int[] resultados = new int[9];
+			resultados[0] = Ventana.Casa.X - X; //dX
+			resultados[1] = Ventana.Casa.Y - Y; //dY
+			//Incrementos en las secciones con avance inclinado
+			if (resultados[0] >= 0)
+			{
+				resultados[2] = 1; //incXi
+			}
+			else
+			{
+				resultados[0] = -resultados[0];
+				resultados[2] = -1;
+			}
+			if (resultados[1] >= 0)
+			{
+				resultados[3] = 1; //incYi
+			}
+			else
+			{
+				resultados[1] = -resultados[1];
+				resultados[3] = -1;
+			}
+			//Incrementos en las secciones de avance recto
+			if (resultados[0] >= resultados[1])
+			{
+				resultados[5] = 0; //incYr
+				resultados[4] = resultados[2]; //incXr
+			}
+			else
+			{
+				resultados[4] = 0;
+				resultados[5] = resultados[3];
+				//Intercambio
+				int k = resultados[0];
+				resultados[0] = resultados[1];
+				resultados[1] = k;
+			}
+			//Inicializar valores
+			resultados[6] = 2 * resultados[1]; //avR
+			resultados[7] = resultados[6] - resultados[0]; //av
+			resultados[8] = resultados[7] - resultados[0]; //avI
+			return resultados;
+		}
+
 		public async Task LineaBresenhamAsync() 
 		{
 			CoordenadasAuxiliares = new int[4][];
+			int xM = -1;
+			int yM = -1;
+			bool m = false;
+			bool r = false;
 			//Variables de distancia
-			int dX = (Ventana.Casa.X - X);
-			int dY = (Ventana.Casa.Y - Y);
-			int incXi, incYi, incXr, incYr;
-			//Incrementos en las secciones con avance inclinado
-			if (dX >= 0)
-			{
-				incXi = 1;
-			}
-			else
-			{
-				dX = -dX;
-				incXi = -1;
-			}
-			if (dY >= 0)
-			{
-				incYi = 1;
-			}
-			else
-			{
-				dY = -dY;
-				incYi = -1;
-			}
-			//Incrementos en las secciones de avance recto
-			if (dX >= dY)
-			{
-				incYr = 0;
-				incXr = incXi;
-			}
-			else
-			{
-				incXr = 0;
-				incYr = incYi;
-				//Intercambio
-				int k = dX;
-				dX = dY;
-				dY = k;
-			}
-			//Inicializar valores
-			int avR = 2 * dY;
-			int av = avR - dX;
-			int avI = av - dX;
+			int dX, dY, incXi, incYi, incXr, incYr, avR, av, avI;
+			int[] variablesDistancia = CalcularLineaBresenham();
+			dX = variablesDistancia[0];
+			dY = variablesDistancia[1];
+			incXi = variablesDistancia[2];
+			incYi = variablesDistancia[3];
+			incXr = variablesDistancia[4];
+			incYr = variablesDistancia[5];
+			avR = variablesDistancia[6];
+			av = variablesDistancia[7];
+			avI = variablesDistancia[8];
 			//Ciclo para el trazado de las lineas
-			while (X != Ventana.Casa.X && Y != Ventana.Casa.Y)
+			while (!(X == Ventana.Casa.X && Y == Ventana.Casa.Y))
 			{
 				Colocar();
+				await Task.Delay(250);
 				ReconocerAmbiente(X, Y, true);
 				await Task.Run(QuitarAuxiliaresAsync);
 				ContadorPasos++;
 				AmbienteAvatar[X, Y] = ContadorPasos;
+				await Task.Run(QuitarAsync);
 				if (av >= 0 && VerificarMovimiento(X + incXi, Y + incYi))
 				{
-					await Task.Run(QuitarAsync);
 					X = X + incXi;
 					Y = Y + incYi;
 					av = av + avI;
-					AmbienteAvatar[X, Y] = 0;
+					UltimoMovimiento = 0;
 				}
 				else if (VerificarMovimiento(X + incXr, Y + incYr))
 				{
-					await Task.Run(QuitarAsync);
 					X = X + incXr;
 					Y = Y + incYr;
 					av = av + avR;
+					UltimoMovimiento = 0;
 				}
-				else 
+				else if (Mover(dX, dY))
 				{
-					//Moverse hacia uno de los espacios contiguos libres 
-					await Task.Run(QuitarAsync);
-					if (Mover())
+					if (m == false)
 					{
-						await LineaBresenhamAsync(); //Volvemos a calcular el recorrido
+						xM = X;
+						yM = Y;
+						m = true;
 					}
-					else
+					//ReCalcular
+					variablesDistancia = CalcularLineaBresenham();
+					dX = variablesDistancia[0];
+					dY = variablesDistancia[1];
+					incXi = variablesDistancia[2];
+					incYi = variablesDistancia[3];
+					incXr = variablesDistancia[4];
+					incYr = variablesDistancia[5];
+					avR = variablesDistancia[6];
+					av = variablesDistancia[7];
+					avI = variablesDistancia[8];
+				}
+				else if (m && !r)
+				{
+					if (UltimoMovimiento == 1)
 					{
-						MessageBox.Show("Ya no se puede avanzar");
-						return;
+						UltimoMovimiento = 2;
 					}
+					else if (UltimoMovimiento == 2)
+					{
+						UltimoMovimiento = 1;
+					}
+					else if (UltimoMovimiento == 3)
+					{
+						UltimoMovimiento = 4;
+					}
+					else if (UltimoMovimiento == 4)
+					{
+						UltimoMovimiento = 3;
+					}
+					//Regresar
+					while (!(X == xM && Y == yM))
+					{
+						AmbienteAvatar[X, Y] = 0;
+						Mover(dX, dY);
+					}
+					r = true;
+				}
+				else
+				{
+					MessageBox.Show("Ya no se puede avanzar");
+					Colocar();
+					return;
 				}
 			}
 			EnCasa = true;
 		}
 
-		public bool Mover()
+		public bool Mover(int dX, int dY)
 		{
-			int dX = (Ventana.Casa.X - X);
-			int dY = (Ventana.Casa.Y - Y);
-			//Elegimos si el movimiento será en X o en Y (La mayor distancia)
-			if (Math.Abs(dX) >= Math.Abs(dY)) //En Y
+			if (UltimoMovimiento != 0)
 			{
-				//Si es para arriba o abajo
-				if (dY > 0 && AmbienteAvatar[X, Y + 1] == 0) //Para abajo
+				if (UltimoMovimiento == 1)
 				{
-					Y += 1;
-					return true;
+					if (MoverArriba(true))
+					{
+						return true;
+					}
 				}
-				//Si no fue para abajo hacia arriba
-				if (AmbienteAvatar[X, Y - 1] == 0)
+				if (UltimoMovimiento == 2)
 				{
-					Y -= 1;
-					return true;
+					if (MoverAbajo(true))
+					{
+						return true;
+					}
+				}
+				if (UltimoMovimiento == 3)
+				{
+					if (MoverIzquierda(true))
+					{
+						return true;
+					}
+				}
+				if (UltimoMovimiento == 4)
+				{
+					if (MoverDerecha(true))
+					{
+						return true;
+					}
 				}
 			}
-			//Si no fue en Y en X
-			//Para la derecha
-			if (dX > 0 && AmbienteAvatar[X + 1, Y] == 0)
+			else
 			{
-				X += 1;
-				return true;
-			}
-			//Si no fue para la derecha hacia la izquierda
-			if (AmbienteAvatar[X - 1, Y] == 0)
-			{
-				X -= 1;
-				return true;
+				//Elegimos si el movimiento será en X o en Y (La mayor distancia)
+				if (Math.Abs(dX) >= Math.Abs(dY)) //En Y
+				{
+					//Si es para arriba o abajo
+					if (dY > 0 && MoverAbajo(true)) //Para abajo
+					{
+						return true;
+					}
+					//Si no fue para abajo hacia arriba
+					if (MoverArriba(true))
+					{
+						UltimoMovimiento = 1;
+						Y -= 1;
+						return true;
+					}
+				}
+				//Si no fue en Y en X
+				//Para la derecha
+				if (dX > 0 && MoverDerecha(true))
+				{
+					UltimoMovimiento = 4;
+					X += 1;
+					return true;
+				}
+				//Si no fue para la derecha hacia la izquierda
+				if (MoverIzquierda(true))
+				{
+					UltimoMovimiento = 3;
+					X -= 1;
+					return true;
+				}
 			}
 			return false;
 		}
@@ -199,13 +354,13 @@ namespace AmbienteZelda
 
 		public void ReconocerAmbiente(int x, int y, bool imagen = false)
 		{
-			if (y > 0 && !(x == X && Y == y - 1))
+			if (y > 0) //!(x == X && Y == y - 1)
 			{
 				if (VerificarMovimiento(x, y - 1))
 				{
-					if (AmbienteAvatar[x + 1, y] == -2)
+					if (AmbienteAvatar[x, y - 1] == -2)
 					{
-						AmbienteAvatar[x + 1, y] = 0;
+						AmbienteAvatar[x, y - 1] = 0;
 					}
 					if (imagen)
 					{
@@ -219,13 +374,13 @@ namespace AmbienteZelda
 					AmbienteAvatar[x, y - 1] = -1;
 				}
 			}
-			if (y < Ventana.Ambiente.GetLength(1) - 1 && !(x == X && Y == y + 1))
+			if (y < Ventana.Ambiente.GetLength(1) - 1) //!(x == X && Y == y + 1)
 			{
 				if (VerificarMovimiento(x, y + 1))
 				{
-					if (AmbienteAvatar[x + 1, y] == -2)
+					if (AmbienteAvatar[x, y + 1] == -2)
 					{
-						AmbienteAvatar[x + 1, y] = 0;
+						AmbienteAvatar[x, y + 1] = 0;
 					}
 					if (imagen)
 					{
@@ -239,13 +394,13 @@ namespace AmbienteZelda
 					AmbienteAvatar[x, y + 1] = -1;
 				}
 			}
-			if (x > 0 && !(x - 1 == X && Y == y))
+			if (x > 0) //!(x - 1 == X && Y == y)
 			{
 				if (VerificarMovimiento(x - 1, y))
 				{
-					if (AmbienteAvatar[x + 1, y] == -2)
+					if (AmbienteAvatar[x - 1, y] == -2)
 					{
-						AmbienteAvatar[x + 1, y] = 0;
+						AmbienteAvatar[x - 1, y] = 0;
 					}
 					if (imagen)
 					{
@@ -259,7 +414,7 @@ namespace AmbienteZelda
 					AmbienteAvatar[x - 1, y] = -1;
 				}
 			}
-			if (x < Ventana.Ambiente.GetLength(0) - 1 && !(x + 1 == X && Y == y))
+			if (x < Ventana.Ambiente.GetLength(0) - 1)  //!(x + 1 == X && Y == y)
 			{
 				if (VerificarMovimiento(x + 1, y))
 				{
