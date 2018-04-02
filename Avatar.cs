@@ -48,7 +48,7 @@ namespace AmbienteZelda
 
 		private bool MoverArriba(bool verificarAmbienteAvatar = false)
 		{
-			if (Y > 0 && VerificarMovimiento(X, Y - 1))
+			if (Y > 0 && (VerificarMovimiento(X, Y - 1) || VerificarEnCasa(X, Y - 1)))
 			{
 				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y - 1] < 0)
 				{
@@ -63,7 +63,7 @@ namespace AmbienteZelda
 
 		private bool MoverAbajo(bool verificarAmbienteAvatar = false)
 		{
-			if (Y < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(X, Y + 1))
+			if (Y < Ventana.Ambiente.GetLength(1) - 1 && (VerificarMovimiento(X, Y + 1) || VerificarEnCasa(X, Y + 1)))
 			{
 				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y + 1] < 0)
 				{
@@ -78,7 +78,7 @@ namespace AmbienteZelda
 
 		private bool MoverIzquierda(bool verificarAmbienteAvatar = false)
 		{
-			if (X > 0 && VerificarMovimiento(X - 1, Y))
+			if (X > 0 && (VerificarMovimiento(X - 1, Y) || VerificarEnCasa(X - 1, Y)))
 			{
 				if (verificarAmbienteAvatar && AmbienteAvatar[X - 1, Y] < 0)
 				{
@@ -93,7 +93,7 @@ namespace AmbienteZelda
 
 		private bool MoverDerecha(bool verificarAmbienteAvatar = false)
 		{
-			if (X < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(X + 1, Y))
+			if (X < Ventana.Ambiente.GetLength(0) - 1 && (VerificarMovimiento(X + 1, Y) || VerificarEnCasa(X + 1, Y)))
 			{
 				if (verificarAmbienteAvatar && AmbienteAvatar[X + 1, Y] < 0)
 				{
@@ -111,13 +111,18 @@ namespace AmbienteZelda
             if  (Ventana.Ambiente[x, y].Image == null)
             {
                 return true;
-            } 
-			if (x == Ventana.Casa.X && y == Ventana.Casa.Y)
+            }
+			return false;
+        }
+
+		private bool VerificarEnCasa(int x, int y)
+		{
+			if ((x == Ventana.Casa.X && y == Ventana.Casa.Y))
 			{
 				return true;
 			}
 			return false;
-        }
+		}
 
 		public async Task QuitarAsync()
 		{
@@ -174,10 +179,6 @@ namespace AmbienteZelda
 		public async Task LineaBresenhamAsync() 
 		{
 			CoordenadasAuxiliares = new int[4][];
-			int xM = -1;
-			int yM = -1;
-			bool m = false;
-			bool r = false;
 			//Variables de distancia
 			int dX, dY, incXi, incYi, incXr, incYr, avR, av, avI;
 			int[] variablesDistancia = CalcularLineaBresenham();
@@ -191,7 +192,7 @@ namespace AmbienteZelda
 			av = variablesDistancia[7];
 			avI = variablesDistancia[8];
 			//Ciclo para el trazado de las lineas
-			while (!(X == Ventana.Casa.X && Y == Ventana.Casa.Y))
+			while (!VerificarEnCasa(X, Y))
 			{
 				Colocar();
 				await Task.Delay(250);
@@ -200,14 +201,14 @@ namespace AmbienteZelda
 				ContadorPasos++;
 				AmbienteAvatar[X, Y] = ContadorPasos;
 				await Task.Run(QuitarAsync);
-				if (av >= 0 && VerificarMovimiento(X + incXi, Y + incYi))
+				if (av >= 0 && (VerificarMovimiento(X + incXi, Y + incYi) || VerificarEnCasa(X + incXi, Y + incYi)))
 				{
 					X = X + incXi;
 					Y = Y + incYi;
 					av = av + avI;
 					UltimoMovimiento = 0;
 				}
-				else if (VerificarMovimiento(X + incXr, Y + incYr))
+				else if (VerificarMovimiento(X + incXr, Y + incYr) || VerificarEnCasa(X + incXr, Y + incYr))
 				{
 					X = X + incXr;
 					Y = Y + incYr;
@@ -216,12 +217,6 @@ namespace AmbienteZelda
 				}
 				else if (Mover(dX, dY))
 				{
-					if (m == false)
-					{
-						xM = X;
-						yM = Y;
-						m = true;
-					}
 					//ReCalcular
 					variablesDistancia = CalcularLineaBresenham();
 					dX = variablesDistancia[0];
@@ -233,32 +228,6 @@ namespace AmbienteZelda
 					avR = variablesDistancia[6];
 					av = variablesDistancia[7];
 					avI = variablesDistancia[8];
-				}
-				else if (m && !r)
-				{
-					if (UltimoMovimiento == 1)
-					{
-						UltimoMovimiento = 2;
-					}
-					else if (UltimoMovimiento == 2)
-					{
-						UltimoMovimiento = 1;
-					}
-					else if (UltimoMovimiento == 3)
-					{
-						UltimoMovimiento = 4;
-					}
-					else if (UltimoMovimiento == 4)
-					{
-						UltimoMovimiento = 3;
-					}
-					//Regresar
-					while (!(X == xM && Y == yM))
-					{
-						AmbienteAvatar[X, Y] = 0;
-						Mover(dX, dY);
-					}
-					r = true;
 				}
 				else
 				{
@@ -272,70 +241,36 @@ namespace AmbienteZelda
 
 		public bool Mover(int dX, int dY)
 		{
-			if (UltimoMovimiento != 0)
+			//Elegimos si el movimiento será en X o en Y (La mayor distancia)
+			if (Math.Abs(dX) >= Math.Abs(dY)) //En Y
 			{
-				if (UltimoMovimiento == 1)
+				//Si es para arriba o abajo
+				if (dY > 0 && MoverAbajo(true)) //Para abajo
 				{
-					if (MoverArriba(true))
-					{
-						return true;
-					}
+					return true;
 				}
-				if (UltimoMovimiento == 2)
+				//Si no fue para abajo hacia arriba
+				if (MoverArriba(true))
 				{
-					if (MoverAbajo(true))
-					{
-						return true;
-					}
-				}
-				if (UltimoMovimiento == 3)
-				{
-					if (MoverIzquierda(true))
-					{
-						return true;
-					}
-				}
-				if (UltimoMovimiento == 4)
-				{
-					if (MoverDerecha(true))
-					{
-						return true;
-					}
+					UltimoMovimiento = 1;
+					Y -= 1;
+					return true;
 				}
 			}
-			else
+			//Si no fue en Y en X
+			//Para la derecha
+			if (dX > 0 && MoverDerecha(true))
 			{
-				//Elegimos si el movimiento será en X o en Y (La mayor distancia)
-				if (Math.Abs(dX) >= Math.Abs(dY)) //En Y
-				{
-					//Si es para arriba o abajo
-					if (dY > 0 && MoverAbajo(true)) //Para abajo
-					{
-						return true;
-					}
-					//Si no fue para abajo hacia arriba
-					if (MoverArriba(true))
-					{
-						UltimoMovimiento = 1;
-						Y -= 1;
-						return true;
-					}
-				}
-				//Si no fue en Y en X
-				//Para la derecha
-				if (dX > 0 && MoverDerecha(true))
-				{
-					UltimoMovimiento = 4;
-					X += 1;
-					return true;
-				}
-				//Si no fue para la derecha hacia la izquierda
-				if (MoverIzquierda(true))
-				{
-					UltimoMovimiento = 3;
-					X -= 1;
-					return true;
-				}
+				UltimoMovimiento = 4;
+				X += 1;
+				return true;
+			}
+			//Si no fue para la derecha hacia la izquierda
+			if (MoverIzquierda(true))
+			{
+				UltimoMovimiento = 3;
+				X -= 1;
+				return true;
 			}
 			return false;
 		}
