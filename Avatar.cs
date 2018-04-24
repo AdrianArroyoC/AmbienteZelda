@@ -9,20 +9,18 @@ namespace AmbienteZelda
     public class Avatar : Objeto
     {
 		public bool EnCasa { get; set; }
-		private int ContadorPasos { get; set; }
-		private int UltimoMovimiento { get; set; }
 		private string RutaImagenAux1 { get; set; }
 		private string RutaImagenAux2 { get; set; }
 		private int[,] AmbienteAvatar { get; set; }
-		private int[][] CoordenadasAuxiliares { get; set; }
+		private int[][] CoordenadasAuxiliares1 { get; set; }
 
 		public Avatar(int x, int y, string rutaImagen, string rutaImagenAux1, string rutaImagenAux2, int[,] ambienteAvatar) : base(x, y, rutaImagen)
 		{
 			RutaImagenAux1 = rutaImagenAux1;
 			RutaImagenAux2 = rutaImagenAux2;
 			AmbienteAvatar = ambienteAvatar;
-			ContadorPasos = 0;
-			UltimoMovimiento = 0;
+			//ContadorPasos = 0;
+			//UltimoMovimiento = 0;
 		}
 
 		public void Mover(PreviewKeyDownEventArgs e) 
@@ -55,7 +53,6 @@ namespace AmbienteZelda
 					return false;
 				}
 				Y -= 1;
-				UltimoMovimiento = 1;
 				return true;
 			}
 			return false;
@@ -70,7 +67,6 @@ namespace AmbienteZelda
 					return false;
 				}
 				Y += 1;
-				UltimoMovimiento = 2;
 				return true;
 			}
 			return false;
@@ -85,7 +81,6 @@ namespace AmbienteZelda
 					return false;
 				}
 				X -= 1;
-				UltimoMovimiento = 3;
 				return true;
 			}
 			return false;
@@ -100,7 +95,6 @@ namespace AmbienteZelda
 					return false;
 				}
 				X += 1;
-				UltimoMovimiento = 4;
 				return true;
 			}
 			return false;
@@ -109,7 +103,7 @@ namespace AmbienteZelda
 		private bool VerificarMovimiento(int x, int y)
         {
             if  (Ventana.Ambiente[x, y].Image == null)
-            {
+			{
                 return true;
             }
 			return false;
@@ -124,13 +118,22 @@ namespace AmbienteZelda
 			return false;
 		}
 
-		public async Task QuitarAsync()
+		private bool VerificarMovimientoCasa(int x, int y)
 		{
-			await Task.Delay(1000);
+			if (VerificarMovimiento(x, y) || VerificarEnCasa(x, y))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		private async Task QuitarAsync()
+		{
+			await Task.Delay(250);
 			Ventana.Ambiente[X, Y].Image = null;
 		}
 
-		public int[] CalcularLineaBresenham()
+		private int[] CalcularLineaBresenham()
 		{
 			int[] resultados = new int[9];
 			resultados[0] = Ventana.Casa.X - X; //dX
@@ -178,7 +181,8 @@ namespace AmbienteZelda
 
 		public async Task LineaBresenhamAsync() 
 		{
-			CoordenadasAuxiliares = new int[4][];
+			CoordenadasAuxiliares1 = new int[4][];
+			bool lineaRecalculada = false;
 			//Variables de distancia
 			int dX, dY, incXi, incYi, incXr, incYr, avR, av, avI;
 			int[] variablesDistancia = CalcularLineaBresenham();
@@ -194,30 +198,53 @@ namespace AmbienteZelda
 			//Ciclo para el trazado de las lineas
 			while (!VerificarEnCasa(X, Y))
 			{
-				Colocar();
-				await Task.Delay(250);
-				ReconocerAmbiente(X, Y, true);
-				await Task.Run(QuitarAuxiliaresAsync);
-				ContadorPasos++;
-				AmbienteAvatar[X, Y] = ContadorPasos;
-				await Task.Run(QuitarAsync);
-				if (av >= 0 && (VerificarMovimiento(X + incXi, Y + incYi) || VerificarEnCasa(X + incXi, Y + incYi)))
+				if (!lineaRecalculada)
 				{
-					X = X + incXi;
-					Y = Y + incYi;
-					av = av + avI;
-					UltimoMovimiento = 0;
+					Colocar();
+					await Task.Delay(250);
+					await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+					await Task.Run(QuitarAsync);
 				}
-				else if (VerificarMovimiento(X + incXr, Y + incYr) || VerificarEnCasa(X + incXr, Y + incYr))
+				if (av >= 0 && (VerificarMovimiento(X + incXi, Y + incYi) || VerificarEnCasa(X + incXi, Y + incYi))) //Inclinado
 				{
-					X = X + incXr;
-					Y = Y + incYr;
+					if (VerificarMovimientoCasa(X + incXi, Y) && VerificarMovimientoCasa(X + incXi, Y + incYi))
+					{
+						X+= incXi;
+						Colocar();
+						await Task.Delay(250);
+						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						await Task.Run(QuitarAsync);
+						Y+= incYi;
+						av = av + avI;
+						lineaRecalculada = false;
+					}
+					else if (VerificarMovimientoCasa(X, Y + incYi) && VerificarMovimientoCasa(X + incXi, Y + incYi))
+					{
+						Y+= incYi;
+						Colocar();
+						await Task.Delay(250);
+						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						await Task.Run(QuitarAsync);
+						X+= incXi;
+						av = av + avI;
+						lineaRecalculada = false;
+					}
+					else
+					{
+						Colocar();
+						MessageBox.Show("Ya no se puede avanzar");
+						return;
+					}
+				}
+				else if (VerificarMovimientoCasa(X + incXr, Y + incYr)) //Recto
+				{
+					X+= incXr;
+					Y+= incYr;
 					av = av + avR;
-					UltimoMovimiento = 0;
+					lineaRecalculada = false;
 				}
-				else if (Mover(dX, dY)) //Se mueve al otro eje en la dirección de la linea
+				else if (!lineaRecalculada) //Recalcular Linea Recta
 				{
-					//ReCalcular
 					variablesDistancia = CalcularLineaBresenham();
 					dX = variablesDistancia[0];
 					dY = variablesDistancia[1];
@@ -228,145 +255,103 @@ namespace AmbienteZelda
 					avR = variablesDistancia[6];
 					av = variablesDistancia[7];
 					avI = variablesDistancia[8];
+					lineaRecalculada = true;
 				}
 				else
 				{
-					MessageBox.Show("Ya no se puede avanzar");
 					Colocar();
+					MessageBox.Show("Ya no se puede avanzar");
 					return;
 				}
 			}
 			EnCasa = true;
 		}
 
-		public bool Mover(int dX, int dY)
+		private async Task ObtenerReconocerCoordenadasAuxiliares()
 		{
-			//Elegimos si el movimiento será en X o en Y (La mayor distancia)
-			if (Math.Abs(dX) >= Math.Abs(dY)) //En Y
+			ObtenerCoordenadasAuxiliares(X, Y, new bool[]{ true, true, true, true, true });
+			ReconocerCoordenadasAuxiliares();
+			int[][] coordenadasAuxiliares2 = new int[4][];
+			for (int i = 0; i < coordenadasAuxiliares2.Length; i++)
 			{
-				//Si es para arriba o abajo
-				if (dY > 0 && MoverAbajo(true)) //Para abajo
+				coordenadasAuxiliares2[i] = CoordenadasAuxiliares1[i];
+			}
+			await Task.Run(QuitarAuxiliaresAsync);
+			bool[] direccionesAuxiliares = new bool[]{ false, false, false, false, false };
+			for (int i = 0; i < coordenadasAuxiliares2.Length; i++)
+			{
+				if (coordenadasAuxiliares2[i] != null)
 				{
-					return true;
+					direccionesAuxiliares[i] = true;
+					ObtenerCoordenadasAuxiliares(coordenadasAuxiliares2[i][0], coordenadasAuxiliares2[i][1], direccionesAuxiliares);
+					direccionesAuxiliares[i] = false;
 				}
-				//Si no fue para abajo hacia arriba
-				if (MoverArriba(true))
+			}
+			ReconocerCoordenadasAuxiliares();
+			await Task.Run(QuitarAuxiliaresAsync);
+			for (int i = 0; i < coordenadasAuxiliares2.Length; i++)
+			{
+				if (coordenadasAuxiliares2[i] != null)
 				{
-					UltimoMovimiento = 1;
-					Y -= 1;
-					return true;
+					direccionesAuxiliares[i + 1] = true;
+					ObtenerCoordenadasAuxiliares(coordenadasAuxiliares2[i][0], coordenadasAuxiliares2[i][1], direccionesAuxiliares);
+					direccionesAuxiliares[i + 1] = false;
 				}
 			}
-			//Si no fue en Y en X
-			//Para la derecha
-			if (dX > 0 && MoverDerecha(true))
-			{
-				UltimoMovimiento = 4;
-				X += 1;
-				return true;
-			}
-			//Si no fue para la derecha hacia la izquierda
-			if (MoverIzquierda(true))
-			{
-				UltimoMovimiento = 3;
-				X -= 1;
-				return true;
-			}
-			return false;
+			ReconocerCoordenadasAuxiliares();
+			await Task.Run(QuitarAuxiliaresAsync);
 		}
 
 		public async Task QuitarAuxiliaresAsync()
 		{
-			await Task.Delay(1000);
-			for (int i = 0; i < CoordenadasAuxiliares.Length; i++)
+			await Task.Delay(250);
+			for (int i = 0; i < CoordenadasAuxiliares1.Length; i++)
 			{
-				if (CoordenadasAuxiliares[i] != null)
+				if (CoordenadasAuxiliares1[i] != null)
 				{
-					Ventana.Ambiente[CoordenadasAuxiliares[i][0], CoordenadasAuxiliares[i][1]].Image = null;
+					Ventana.Ambiente[CoordenadasAuxiliares1[i][0], CoordenadasAuxiliares1[i][1]].Image = null;
+					CoordenadasAuxiliares1[i] = null; 
 				}
 			}
 		}
 
-		public void ReconocerAmbiente(int x, int y, bool imagen = false)
+		public void ObtenerCoordenadasAuxiliares(int x, int y, bool[] dir)
 		{
-			if (y > 0) 
+			if (y > 0 && VerificarMovimiento(x, y - 1) && (dir[0] || dir[4])) //arriba 
 			{
-				if (VerificarMovimiento(x, y - 1))
-				{
-					if (AmbienteAvatar[x, y - 1] == -2)
-					{
-						AmbienteAvatar[x, y - 1] = 0;
-					}
-					if (imagen)
-					{
-						Ventana.Ambiente[x, y - 1].Image = Image.FromFile(RutaImagenAux1);
-						ReconocerAmbiente(x, y - 1);
-						CoordenadasAuxiliares[0] = new int[] { x, y - 1 };
-					}
-				}
-				else 
-				{
-					AmbienteAvatar[x, y - 1] = -1;
-				}
+				CoordenadasAuxiliares1[0] = new int[] { x, y - 1 };
 			}
-			if (y < Ventana.Ambiente.GetLength(1) - 1) 
+			if (x < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(x + 1, y) && dir[1]) //derecha
 			{
-				if (VerificarMovimiento(x, y + 1))
-				{
-					if (AmbienteAvatar[x, y + 1] == -2)
-					{
-						AmbienteAvatar[x, y + 1] = 0;
-					}
-					if (imagen)
-					{
-						Ventana.Ambiente[x, y + 1].Image = Image.FromFile(RutaImagenAux1);
-						ReconocerAmbiente(x, y + 1);
-						CoordenadasAuxiliares[1] = new int[] { x, y + 1 };
-					}
-				}
-				else
-				{
-					AmbienteAvatar[x, y + 1] = -1;
-				}
+				CoordenadasAuxiliares1[1] = new int[] { x + 1, y };
 			}
-			if (x > 0) 
+			if (y < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(x, y + 1) && dir[2]) //abajo
 			{
-				if (VerificarMovimiento(x - 1, y))
-				{
-					if (AmbienteAvatar[x - 1, y] == -2)
-					{
-						AmbienteAvatar[x - 1, y] = 0;
-					}
-					if (imagen)
-					{
-						Ventana.Ambiente[x - 1, y].Image = Image.FromFile(RutaImagenAux2);
-						ReconocerAmbiente(x - 1, y);
-						CoordenadasAuxiliares[2] = new int[] { x - 1, y };
-					}
-				}
-				else 
-				{
-					AmbienteAvatar[x - 1, y] = -1;
-				}
+				CoordenadasAuxiliares1[2] = new int[] { x, y + 1 };				
 			}
-			if (x < Ventana.Ambiente.GetLength(0) - 1)  
+			if (x > 0 && VerificarMovimiento(x - 1, y) && dir[3]) //izquierda
 			{
-				if (VerificarMovimiento(x + 1, y))
+				CoordenadasAuxiliares1[3] = new int[] { x - 1, y };
+			}
+		}
+
+		public void ReconocerCoordenadasAuxiliares()
+		{
+			for (int i = 0; i < CoordenadasAuxiliares1.Length; i++)
+			{
+				if (CoordenadasAuxiliares1[i] != null)
 				{
-					if (AmbienteAvatar[x + 1, y] == -2)
+					int x = CoordenadasAuxiliares1[i][0];
+					int y = CoordenadasAuxiliares1[i][1];
+					if (AmbienteAvatar[x, y] == -2 || AmbienteAvatar[x, y] == 0) //Quitarle el 0 para optimizar espacios por los que ya se paso
 					{
-						AmbienteAvatar[x + 1, y] = 0;
+						AmbienteAvatar[x, y] = 0;
+						Ventana.Ambiente[x, y].Image = Image.FromFile(RutaImagenAux1);
 					}
-					if (imagen)
+					else
 					{
-						Ventana.Ambiente[x + 1, y].Image = Image.FromFile(RutaImagenAux2);
-						ReconocerAmbiente(x + 1, y);
-						CoordenadasAuxiliares[3] = new int[] { x + 1, y };
+						AmbienteAvatar[x, y] = -1;
 					}
-				}
-				else
-				{
-					AmbienteAvatar[x + 1, y] = -1;
 				}
 			}
 		}
