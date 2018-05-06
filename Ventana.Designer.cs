@@ -34,21 +34,30 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.BotonCrearCuadricula = new System.Windows.Forms.Button();
-			this.CajaCuadrosX = new System.Windows.Forms.TextBox();
-			this.CajaCuadrosY = new System.Windows.Forms.TextBox();
+			this.CajaTextoCuadrosBase = new System.Windows.Forms.TextBox();
+			this.CajaTextoCuadrosAltura = new System.Windows.Forms.TextBox();
 			this.modalidadesCajaAgrupacion = new System.Windows.Forms.GroupBox();
 			this.BotonCasa = new System.Windows.Forms.Button();
 			this.BotonAvatar = new System.Windows.Forms.Button();
 			this.BotonObstaculo = new System.Windows.Forms.Button();
-			this.BotonLineaRecta = new System.Windows.Forms.Button();
+			this.BotonLineaRectaReconocimiento = new System.Windows.Forms.Button();
 			this.movimientoCajaAgrupacion = new System.Windows.Forms.GroupBox();
-			this.guardarCajaAgrupacion = new System.Windows.Forms.GroupBox();
+			this.Progreso = new System.Windows.Forms.Label();
+			this.BarraProgresoRandomReconocimiento = new System.Windows.Forms.ProgressBar();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.CajaTextoVisibles = new System.Windows.Forms.TextBox();
+			this.CajaTextoOcultos = new System.Windows.Forms.TextBox();
+			this.BotonMejorRutaReconocimiento = new System.Windows.Forms.Button();
+			this.BotonRandomReconocimiento = new System.Windows.Forms.Button();
+			this.BotonLineaRectaSimple = new System.Windows.Forms.Button();
+			this.partidaCajaAgrupacion = new System.Windows.Forms.GroupBox();
 			this.BotonCargar = new System.Windows.Forms.Button();
 			this.BotonGuardar = new System.Windows.Forms.Button();
 			this.datosCajaAgrupacion.SuspendLayout();
 			this.modalidadesCajaAgrupacion.SuspendLayout();
 			this.movimientoCajaAgrupacion.SuspendLayout();
-			this.guardarCajaAgrupacion.SuspendLayout();
+			this.partidaCajaAgrupacion.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// PanelAmbiente
@@ -70,13 +79,13 @@
 			this.datosCajaAgrupacion.Controls.Add(this.label2);
 			this.datosCajaAgrupacion.Controls.Add(this.label1);
 			this.datosCajaAgrupacion.Controls.Add(this.BotonCrearCuadricula);
-			this.datosCajaAgrupacion.Controls.Add(this.CajaCuadrosX);
-			this.datosCajaAgrupacion.Controls.Add(this.CajaCuadrosY);
-			this.datosCajaAgrupacion.Location = new System.Drawing.Point(695, 7);
+			this.datosCajaAgrupacion.Controls.Add(this.CajaTextoCuadrosBase);
+			this.datosCajaAgrupacion.Controls.Add(this.CajaTextoCuadrosAltura);
+			this.datosCajaAgrupacion.Location = new System.Drawing.Point(695, 15);
 			this.datosCajaAgrupacion.Margin = new System.Windows.Forms.Padding(4);
 			this.datosCajaAgrupacion.Name = "datosCajaAgrupacion";
 			this.datosCajaAgrupacion.Padding = new System.Windows.Forms.Padding(4);
-			this.datosCajaAgrupacion.Size = new System.Drawing.Size(339, 126);
+			this.datosCajaAgrupacion.Size = new System.Drawing.Size(340, 100);
 			this.datosCajaAgrupacion.TabIndex = 1;
 			this.datosCajaAgrupacion.TabStop = false;
 			this.datosCajaAgrupacion.Text = "Datos del Mapa";
@@ -84,17 +93,17 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(187, 40);
+			this.label2.Location = new System.Drawing.Point(157, 30);
 			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(17, 17);
+			this.label2.Size = new System.Drawing.Size(97, 17);
 			this.label2.TabIndex = 4;
-			this.label2.Text = "X";
+			this.label2.Text = "Base  /  Altura";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(21, 38);
+			this.label1.Location = new System.Drawing.Point(7, 30);
 			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(61, 17);
@@ -103,43 +112,43 @@
 			// 
 			// BotonCrearCuadricula
 			// 
-			this.BotonCrearCuadricula.Location = new System.Drawing.Point(99, 76);
+			this.BotonCrearCuadricula.Location = new System.Drawing.Point(7, 57);
 			this.BotonCrearCuadricula.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonCrearCuadricula.Name = "BotonCrearCuadricula";
-			this.BotonCrearCuadricula.Size = new System.Drawing.Size(199, 28);
+			this.BotonCrearCuadricula.Size = new System.Drawing.Size(325, 28);
 			this.BotonCrearCuadricula.TabIndex = 2;
 			this.BotonCrearCuadricula.Text = "Generar";
 			this.BotonCrearCuadricula.UseVisualStyleBackColor = true;
 			this.BotonCrearCuadricula.Click += new System.EventHandler(this.BotonCrearCuadricula_Click);
 			// 
-			// CajaCuadrosX
+			// CajaTextoCuadrosBase
 			// 
-			this.CajaCuadrosX.Location = new System.Drawing.Point(99, 35);
-			this.CajaCuadrosX.Margin = new System.Windows.Forms.Padding(4);
-			this.CajaCuadrosX.Name = "CajaCuadrosX";
-			this.CajaCuadrosX.Size = new System.Drawing.Size(73, 22);
-			this.CajaCuadrosX.TabIndex = 0;
-			this.CajaCuadrosX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosX_KeyPress);
+			this.CajaTextoCuadrosBase.Location = new System.Drawing.Point(80, 27);
+			this.CajaTextoCuadrosBase.Margin = new System.Windows.Forms.Padding(4);
+			this.CajaTextoCuadrosBase.Name = "CajaTextoCuadrosBase";
+			this.CajaTextoCuadrosBase.Size = new System.Drawing.Size(73, 22);
+			this.CajaTextoCuadrosBase.TabIndex = 0;
+			this.CajaTextoCuadrosBase.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosX_KeyPress);
 			// 
-			// CajaCuadrosY
+			// CajaTextoCuadrosAltura
 			// 
-			this.CajaCuadrosY.Location = new System.Drawing.Point(225, 35);
-			this.CajaCuadrosY.Margin = new System.Windows.Forms.Padding(4);
-			this.CajaCuadrosY.Name = "CajaCuadrosY";
-			this.CajaCuadrosY.Size = new System.Drawing.Size(73, 22);
-			this.CajaCuadrosY.TabIndex = 1;
-			this.CajaCuadrosY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosY_KeyPress);
+			this.CajaTextoCuadrosAltura.Location = new System.Drawing.Point(259, 27);
+			this.CajaTextoCuadrosAltura.Margin = new System.Windows.Forms.Padding(4);
+			this.CajaTextoCuadrosAltura.Name = "CajaTextoCuadrosAltura";
+			this.CajaTextoCuadrosAltura.Size = new System.Drawing.Size(73, 22);
+			this.CajaTextoCuadrosAltura.TabIndex = 1;
+			this.CajaTextoCuadrosAltura.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CajaCuadrosY_KeyPress);
 			// 
 			// modalidadesCajaAgrupacion
 			// 
 			this.modalidadesCajaAgrupacion.Controls.Add(this.BotonCasa);
 			this.modalidadesCajaAgrupacion.Controls.Add(this.BotonAvatar);
 			this.modalidadesCajaAgrupacion.Controls.Add(this.BotonObstaculo);
-			this.modalidadesCajaAgrupacion.Location = new System.Drawing.Point(695, 140);
+			this.modalidadesCajaAgrupacion.Location = new System.Drawing.Point(695, 125);
 			this.modalidadesCajaAgrupacion.Margin = new System.Windows.Forms.Padding(4);
 			this.modalidadesCajaAgrupacion.Name = "modalidadesCajaAgrupacion";
 			this.modalidadesCajaAgrupacion.Padding = new System.Windows.Forms.Padding(4);
-			this.modalidadesCajaAgrupacion.Size = new System.Drawing.Size(339, 123);
+			this.modalidadesCajaAgrupacion.Size = new System.Drawing.Size(340, 125);
 			this.modalidadesCajaAgrupacion.TabIndex = 2;
 			this.modalidadesCajaAgrupacion.TabStop = false;
 			this.modalidadesCajaAgrupacion.Text = "Modalidades";
@@ -150,10 +159,10 @@
 			this.BotonCasa.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonCasa.Enabled = false;
 			this.BotonCasa.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.BotonCasa.Location = new System.Drawing.Point(240, 30);
+			this.BotonCasa.Location = new System.Drawing.Point(249, 27);
 			this.BotonCasa.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonCasa.Name = "BotonCasa";
-			this.BotonCasa.Size = new System.Drawing.Size(80, 74);
+			this.BotonCasa.Size = new System.Drawing.Size(83, 83);
 			this.BotonCasa.TabIndex = 5;
 			this.BotonCasa.UseVisualStyleBackColor = true;
 			this.BotonCasa.Click += new System.EventHandler(this.BotonCasa_Click);
@@ -164,10 +173,10 @@
 			this.BotonAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonAvatar.Enabled = false;
 			this.BotonAvatar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.BotonAvatar.Location = new System.Drawing.Point(130, 31);
+			this.BotonAvatar.Location = new System.Drawing.Point(131, 27);
 			this.BotonAvatar.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonAvatar.Name = "BotonAvatar";
-			this.BotonAvatar.Size = new System.Drawing.Size(80, 74);
+			this.BotonAvatar.Size = new System.Drawing.Size(83, 83);
 			this.BotonAvatar.TabIndex = 4;
 			this.BotonAvatar.UseVisualStyleBackColor = true;
 			this.BotonAvatar.Click += new System.EventHandler(this.BotonAvatar_Click);
@@ -178,53 +187,157 @@
 			this.BotonObstaculo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BotonObstaculo.Enabled = false;
 			this.BotonObstaculo.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.BotonObstaculo.Location = new System.Drawing.Point(21, 30);
+			this.BotonObstaculo.Location = new System.Drawing.Point(10, 27);
 			this.BotonObstaculo.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonObstaculo.Name = "BotonObstaculo";
-			this.BotonObstaculo.Size = new System.Drawing.Size(80, 74);
+			this.BotonObstaculo.Size = new System.Drawing.Size(83, 83);
 			this.BotonObstaculo.TabIndex = 3;
 			this.BotonObstaculo.UseVisualStyleBackColor = true;
 			this.BotonObstaculo.Click += new System.EventHandler(this.BotonObstaculo_Click);
 			// 
-			// BotonLineaRecta
+			// BotonLineaRectaReconocimiento
 			// 
-			this.BotonLineaRecta.Enabled = false;
-			this.BotonLineaRecta.Location = new System.Drawing.Point(99, 22);
-			this.BotonLineaRecta.Margin = new System.Windows.Forms.Padding(4);
-			this.BotonLineaRecta.Name = "BotonLineaRecta";
-			this.BotonLineaRecta.Size = new System.Drawing.Size(199, 28);
-			this.BotonLineaRecta.TabIndex = 3;
-			this.BotonLineaRecta.Text = "Linea Recta";
-			this.BotonLineaRecta.UseVisualStyleBackColor = true;
-			this.BotonLineaRecta.Click += new System.EventHandler(this.BotonLineaRecta_Click);
+			this.BotonLineaRectaReconocimiento.Enabled = false;
+			this.BotonLineaRectaReconocimiento.Location = new System.Drawing.Point(7, 68);
+			this.BotonLineaRectaReconocimiento.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonLineaRectaReconocimiento.Name = "BotonLineaRectaReconocimiento";
+			this.BotonLineaRectaReconocimiento.Size = new System.Drawing.Size(325, 28);
+			this.BotonLineaRectaReconocimiento.TabIndex = 3;
+			this.BotonLineaRectaReconocimiento.Text = "Linea Recta con Reconocimiento";
+			this.BotonLineaRectaReconocimiento.UseVisualStyleBackColor = true;
+			this.BotonLineaRectaReconocimiento.Click += new System.EventHandler(this.BotonLineaRectaReconocimiento_Click);
 			// 
 			// movimientoCajaAgrupacion
 			// 
-			this.movimientoCajaAgrupacion.Controls.Add(this.BotonLineaRecta);
-			this.movimientoCajaAgrupacion.Location = new System.Drawing.Point(695, 270);
+			this.movimientoCajaAgrupacion.Controls.Add(this.Progreso);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BarraProgresoRandomReconocimiento);
+			this.movimientoCajaAgrupacion.Controls.Add(this.label3);
+			this.movimientoCajaAgrupacion.Controls.Add(this.label4);
+			this.movimientoCajaAgrupacion.Controls.Add(this.CajaTextoVisibles);
+			this.movimientoCajaAgrupacion.Controls.Add(this.CajaTextoOcultos);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonMejorRutaReconocimiento);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonRandomReconocimiento);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonLineaRectaSimple);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonLineaRectaReconocimiento);
+			this.movimientoCajaAgrupacion.Location = new System.Drawing.Point(695, 260);
 			this.movimientoCajaAgrupacion.Name = "movimientoCajaAgrupacion";
-			this.movimientoCajaAgrupacion.Size = new System.Drawing.Size(339, 100);
+			this.movimientoCajaAgrupacion.Size = new System.Drawing.Size(340, 259);
 			this.movimientoCajaAgrupacion.TabIndex = 4;
 			this.movimientoCajaAgrupacion.TabStop = false;
 			this.movimientoCajaAgrupacion.Text = "Movimiento";
 			// 
-			// guardarCajaAgrupacion
+			// Progreso
 			// 
-			this.guardarCajaAgrupacion.Controls.Add(this.BotonCargar);
-			this.guardarCajaAgrupacion.Controls.Add(this.BotonGuardar);
-			this.guardarCajaAgrupacion.Location = new System.Drawing.Point(695, 376);
-			this.guardarCajaAgrupacion.Name = "guardarCajaAgrupacion";
-			this.guardarCajaAgrupacion.Size = new System.Drawing.Size(339, 100);
-			this.guardarCajaAgrupacion.TabIndex = 5;
-			this.guardarCajaAgrupacion.TabStop = false;
-			this.guardarCajaAgrupacion.Text = "Guardar/Cargar";
+			this.Progreso.AutoSize = true;
+			this.Progreso.BackColor = System.Drawing.Color.Transparent;
+			this.Progreso.Location = new System.Drawing.Point(142, 184);
+			this.Progreso.Name = "Progreso";
+			this.Progreso.Size = new System.Drawing.Size(44, 17);
+			this.Progreso.TabIndex = 12;
+			this.Progreso.Text = "0/110";
+			// 
+			// BarraProgresoRandomReconocimiento
+			// 
+			this.BarraProgresoRandomReconocimiento.Location = new System.Drawing.Point(7, 178);
+			this.BarraProgresoRandomReconocimiento.Maximum = 110;
+			this.BarraProgresoRandomReconocimiento.Name = "BarraProgresoRandomReconocimiento";
+			this.BarraProgresoRandomReconocimiento.Size = new System.Drawing.Size(325, 28);
+			this.BarraProgresoRandomReconocimiento.Step = 1;
+			this.BarraProgresoRandomReconocimiento.TabIndex = 11;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(183, 148);
+			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(56, 17);
+			this.label3.TabIndex = 10;
+			this.label3.Text = "Ocultos";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(7, 148);
+			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(56, 17);
+			this.label4.TabIndex = 9;
+			this.label4.Text = "Visibles";
+			// 
+			// CajaTextoVisibles
+			// 
+			this.CajaTextoVisibles.Enabled = false;
+			this.CajaTextoVisibles.Location = new System.Drawing.Point(80, 145);
+			this.CajaTextoVisibles.Margin = new System.Windows.Forms.Padding(4);
+			this.CajaTextoVisibles.Name = "CajaTextoVisibles";
+			this.CajaTextoVisibles.Size = new System.Drawing.Size(73, 22);
+			this.CajaTextoVisibles.TabIndex = 7;
+			this.CajaTextoVisibles.Text = "10";
+			// 
+			// CajaTextoOcultos
+			// 
+			this.CajaTextoOcultos.Enabled = false;
+			this.CajaTextoOcultos.Location = new System.Drawing.Point(258, 145);
+			this.CajaTextoOcultos.Margin = new System.Windows.Forms.Padding(4);
+			this.CajaTextoOcultos.Name = "CajaTextoOcultos";
+			this.CajaTextoOcultos.Size = new System.Drawing.Size(73, 22);
+			this.CajaTextoOcultos.TabIndex = 8;
+			this.CajaTextoOcultos.Text = "100";
+			// 
+			// BotonMejorRutaReconocimiento
+			// 
+			this.BotonMejorRutaReconocimiento.Enabled = false;
+			this.BotonMejorRutaReconocimiento.Location = new System.Drawing.Point(7, 216);
+			this.BotonMejorRutaReconocimiento.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonMejorRutaReconocimiento.Name = "BotonMejorRutaReconocimiento";
+			this.BotonMejorRutaReconocimiento.Size = new System.Drawing.Size(325, 28);
+			this.BotonMejorRutaReconocimiento.TabIndex = 6;
+			this.BotonMejorRutaReconocimiento.Text = "Mejor Ruta del Random";
+			this.BotonMejorRutaReconocimiento.UseVisualStyleBackColor = true;
+			this.BotonMejorRutaReconocimiento.Click += new System.EventHandler(this.BotonMejorRutaReconocimiento_Click);
+			// 
+			// BotonRandomReconocimiento
+			// 
+			this.BotonRandomReconocimiento.Enabled = false;
+			this.BotonRandomReconocimiento.Location = new System.Drawing.Point(7, 106);
+			this.BotonRandomReconocimiento.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonRandomReconocimiento.Name = "BotonRandomReconocimiento";
+			this.BotonRandomReconocimiento.Size = new System.Drawing.Size(325, 28);
+			this.BotonRandomReconocimiento.TabIndex = 5;
+			this.BotonRandomReconocimiento.Text = "Random con Reconocimiento";
+			this.BotonRandomReconocimiento.UseVisualStyleBackColor = true;
+			this.BotonRandomReconocimiento.Click += new System.EventHandler(this.BotonRandomReconocimiento_Click);
+			// 
+			// BotonLineaRectaSimple
+			// 
+			this.BotonLineaRectaSimple.Enabled = false;
+			this.BotonLineaRectaSimple.Location = new System.Drawing.Point(7, 30);
+			this.BotonLineaRectaSimple.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonLineaRectaSimple.Name = "BotonLineaRectaSimple";
+			this.BotonLineaRectaSimple.Size = new System.Drawing.Size(325, 28);
+			this.BotonLineaRectaSimple.TabIndex = 4;
+			this.BotonLineaRectaSimple.Text = "Linea Recta Simple";
+			this.BotonLineaRectaSimple.UseVisualStyleBackColor = true;
+			this.BotonLineaRectaSimple.Click += new System.EventHandler(this.BotonLineaRectaSimple_Click);
+			// 
+			// partidaCajaAgrupacion
+			// 
+			this.partidaCajaAgrupacion.Controls.Add(this.BotonCargar);
+			this.partidaCajaAgrupacion.Controls.Add(this.BotonGuardar);
+			this.partidaCajaAgrupacion.Location = new System.Drawing.Point(695, 530);
+			this.partidaCajaAgrupacion.Name = "partidaCajaAgrupacion";
+			this.partidaCajaAgrupacion.Size = new System.Drawing.Size(340, 100);
+			this.partidaCajaAgrupacion.TabIndex = 5;
+			this.partidaCajaAgrupacion.TabStop = false;
+			this.partidaCajaAgrupacion.Text = "Partida";
 			// 
 			// BotonCargar
 			// 
-			this.BotonCargar.Location = new System.Drawing.Point(99, 58);
+			this.BotonCargar.Location = new System.Drawing.Point(7, 58);
 			this.BotonCargar.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonCargar.Name = "BotonCargar";
-			this.BotonCargar.Size = new System.Drawing.Size(199, 28);
+			this.BotonCargar.Size = new System.Drawing.Size(325, 28);
 			this.BotonCargar.TabIndex = 5;
 			this.BotonCargar.Text = "Cargar";
 			this.BotonCargar.UseVisualStyleBackColor = true;
@@ -233,10 +346,10 @@
 			// BotonGuardar
 			// 
 			this.BotonGuardar.Enabled = false;
-			this.BotonGuardar.Location = new System.Drawing.Point(99, 22);
+			this.BotonGuardar.Location = new System.Drawing.Point(7, 22);
 			this.BotonGuardar.Margin = new System.Windows.Forms.Padding(4);
 			this.BotonGuardar.Name = "BotonGuardar";
-			this.BotonGuardar.Size = new System.Drawing.Size(199, 28);
+			this.BotonGuardar.Size = new System.Drawing.Size(325, 28);
 			this.BotonGuardar.TabIndex = 4;
 			this.BotonGuardar.Text = "Guardar";
 			this.BotonGuardar.UseVisualStyleBackColor = true;
@@ -249,7 +362,7 @@
 			this.BackColor = System.Drawing.SystemColors.AppWorkspace;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.ClientSize = new System.Drawing.Size(1045, 647);
-			this.Controls.Add(this.guardarCajaAgrupacion);
+			this.Controls.Add(this.partidaCajaAgrupacion);
 			this.Controls.Add(this.movimientoCajaAgrupacion);
 			this.Controls.Add(this.modalidadesCajaAgrupacion);
 			this.Controls.Add(this.datosCajaAgrupacion);
@@ -265,7 +378,8 @@
 			this.datosCajaAgrupacion.PerformLayout();
 			this.modalidadesCajaAgrupacion.ResumeLayout(false);
 			this.movimientoCajaAgrupacion.ResumeLayout(false);
-			this.guardarCajaAgrupacion.ResumeLayout(false);
+			this.movimientoCajaAgrupacion.PerformLayout();
+			this.partidaCajaAgrupacion.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -277,17 +391,26 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button BotonCrearCuadricula;
-        private System.Windows.Forms.TextBox CajaCuadrosX;
-        private System.Windows.Forms.TextBox CajaCuadrosY;
+        private System.Windows.Forms.TextBox CajaTextoCuadrosBase;
+        private System.Windows.Forms.TextBox CajaTextoCuadrosAltura;
         private System.Windows.Forms.GroupBox modalidadesCajaAgrupacion;
         private System.Windows.Forms.Button BotonCasa;
         private System.Windows.Forms.Button BotonAvatar;
         private System.Windows.Forms.Button BotonObstaculo;
-		private System.Windows.Forms.Button BotonLineaRecta;
+		private System.Windows.Forms.Button BotonLineaRectaReconocimiento;
 		private System.Windows.Forms.GroupBox movimientoCajaAgrupacion;
-		private System.Windows.Forms.GroupBox guardarCajaAgrupacion;
+		private System.Windows.Forms.GroupBox partidaCajaAgrupacion;
 		private System.Windows.Forms.Button BotonCargar;
 		private System.Windows.Forms.Button BotonGuardar;
+		private System.Windows.Forms.Button BotonLineaRectaSimple;
+		private System.Windows.Forms.Button BotonMejorRutaReconocimiento;
+		private System.Windows.Forms.Button BotonRandomReconocimiento;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox CajaTextoVisibles;
+		private System.Windows.Forms.TextBox CajaTextoOcultos;
+		public System.Windows.Forms.Label Progreso;
+		public System.Windows.Forms.ProgressBar BarraProgresoRandomReconocimiento;
 	}
 }
 

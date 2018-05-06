@@ -9,92 +9,79 @@ namespace AmbienteZelda
     public class Avatar : Objeto
     {
 		public bool EnCasa { get; set; }
-		private string RutaImagenAux1 { get; set; }
-		private string RutaImagenAux2 { get; set; }
+		private string RutaImagenAux { get; set; }
 		private int[,] AmbienteAvatar { get; set; }
 		private int[][] CoordenadasAuxiliares1 { get; set; }
+		public int[][,] PruebasReconocimientoRandom { get; set; }
+		private ProgressBar BarraProgreso { get; set; }
+		private Label Progreso { get; set; }
 
-		public Avatar(int x, int y, string rutaImagen, string rutaImagenAux1, string rutaImagenAux2, int[,] ambienteAvatar) : base(x, y, rutaImagen)
+		public Avatar(int x, int y, string rutaImagen, string rutaImagenAux, int[,] ambienteAvatar, ProgressBar barraProgreso, Label progreso) : base(x, y, rutaImagen)
 		{
-			RutaImagenAux1 = rutaImagenAux1;
-			RutaImagenAux2 = rutaImagenAux2;
+			RutaImagenAux = rutaImagenAux;
 			AmbienteAvatar = ambienteAvatar;
-			//ContadorPasos = 0;
-			//UltimoMovimiento = 0;
+			BarraProgreso = barraProgreso;
+			Progreso = progreso;
 		}
 
-		public void Mover(PreviewKeyDownEventArgs e) 
+		public bool Mover(int tecla) 
 		{
-			if (e.KeyData == Keys.Up) 
+			bool seMovio = false;
+			if (tecla == 0) 
 			{
-				MoverArriba();
+				seMovio = MoverArriba();
 			}
-			if (e.KeyData == Keys.Down) 
+			else if (tecla == 1)
 			{
-				MoverAbajo();
+				seMovio = MoverDerecha();
 			}
-			if (e.KeyData == Keys.Left)
+			else if (tecla == 2) 
 			{
-				MoverIzquierda();
+				seMovio = MoverAbajo();
 			}
-			if (e.KeyData == Keys.Right) 
+			else
 			{
-				MoverDerecha();
+				seMovio = MoverIzquierda();
 			}
 			Colocar();
+			return seMovio;
 		}
 
-		private bool MoverArriba(bool verificarAmbienteAvatar = false)
+		private bool MoverArriba()
 		{
 			if (Y > 0 && (VerificarMovimiento(X, Y - 1) || VerificarEnCasa(X, Y - 1)))
 			{
-				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y - 1] < 0)
-				{
-					return false;
-				}
 				Y -= 1;
 				return true;
 			}
 			return false;
 		}
 
-		private bool MoverAbajo(bool verificarAmbienteAvatar = false)
+		private bool MoverDerecha()
+		{
+			if (X < Ventana.Ambiente.GetLength(0) - 1 && (VerificarMovimiento(X + 1, Y) || VerificarEnCasa(X + 1, Y)))
+			{
+				X += 1;
+				return true;
+			}
+			return false;
+		}
+
+		private bool MoverAbajo()
 		{
 			if (Y < Ventana.Ambiente.GetLength(1) - 1 && (VerificarMovimiento(X, Y + 1) || VerificarEnCasa(X, Y + 1)))
 			{
-				if (verificarAmbienteAvatar && AmbienteAvatar[X, Y + 1] < 0)
-				{
-					return false;
-				}
 				Y += 1;
 				return true;
 			}
 			return false;
 		}
 
-		private bool MoverIzquierda(bool verificarAmbienteAvatar = false)
+		private bool MoverIzquierda()
 		{
 			if (X > 0 && (VerificarMovimiento(X - 1, Y) || VerificarEnCasa(X - 1, Y)))
 			{
-				if (verificarAmbienteAvatar && AmbienteAvatar[X - 1, Y] < 0)
-				{
-					return false;
-				}
 				X -= 1;
-				return true;
-			}
-			return false;
-		}
-
-		private bool MoverDerecha(bool verificarAmbienteAvatar = false)
-		{
-			if (X < Ventana.Ambiente.GetLength(0) - 1 && (VerificarMovimiento(X + 1, Y) || VerificarEnCasa(X + 1, Y)))
-			{
-				if (verificarAmbienteAvatar && AmbienteAvatar[X + 1, Y] < 0)
-				{
-					return false;
-				}
-				X += 1;
 				return true;
 			}
 			return false;
@@ -113,7 +100,8 @@ namespace AmbienteZelda
 		{
 			if ((x == Ventana.Casa.X && y == Ventana.Casa.Y))
 			{
-				return true;
+				EnCasa = true;
+				return EnCasa;
 			}
 			return false;
 		}
@@ -179,7 +167,7 @@ namespace AmbienteZelda
 			return resultados;
 		}
 
-		public async Task LineaBresenhamAsync() 
+		public async Task LineaBresenhamAsync(bool reconocimiento = false) 
 		{
 			CoordenadasAuxiliares1 = new int[4][];
 			bool lineaRecalculada = false;
@@ -202,7 +190,11 @@ namespace AmbienteZelda
 				{
 					Colocar();
 					await Task.Delay(250);
-					await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+					if (reconocimiento)
+					{
+						ReconocerPosicion();
+						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+					}
 					await Task.Run(QuitarAsync);
 				}
 				if (av >= 0 && (VerificarMovimiento(X + incXi, Y + incYi) || VerificarEnCasa(X + incXi, Y + incYi))) //Inclinado
@@ -212,9 +204,13 @@ namespace AmbienteZelda
 						X+= incXi;
 						Colocar();
 						await Task.Delay(250);
-						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						if (reconocimiento)
+						{
+							ReconocerPosicion();
+							await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						}
 						await Task.Run(QuitarAsync);
-						Y+= incYi;
+						Y += incYi;
 						av = av + avI;
 						lineaRecalculada = false;
 					}
@@ -223,9 +219,13 @@ namespace AmbienteZelda
 						Y+= incYi;
 						Colocar();
 						await Task.Delay(250);
-						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						if (reconocimiento)
+						{
+							ReconocerPosicion();
+							await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
+						}
 						await Task.Run(QuitarAsync);
-						X+= incXi;
+						X += incXi;
 						av = av + avI;
 						lineaRecalculada = false;
 					}
@@ -243,8 +243,11 @@ namespace AmbienteZelda
 					av = av + avR;
 					lineaRecalculada = false;
 				}
-				else if (!lineaRecalculada) //Recalcular Linea Recta
+				/*else if (!lineaRecalculada) //Recalcular Linea Recta 
 				{
+					//Metodo para utilizar el reconocimiento
+					//Revisara los valores a sus lados y se movera aleatoriamente a los valores menores disponibles
+					//Cuando se mueve tratará con línea recta y si se puede la hará y saldrá de aqui pero si no seguirá moviendose
 					variablesDistancia = CalcularLineaBresenham();
 					dX = variablesDistancia[0];
 					dY = variablesDistancia[1];
@@ -256,7 +259,7 @@ namespace AmbienteZelda
 					av = variablesDistancia[7];
 					avI = variablesDistancia[8];
 					lineaRecalculada = true;
-				}
+				}*/
 				else
 				{
 					Colocar();
@@ -264,7 +267,19 @@ namespace AmbienteZelda
 					return;
 				}
 			}
-			EnCasa = true;
+			ImprimirAmbiente();
+		}
+
+		private void ReconocerPosicion()
+		{
+			if (AmbienteAvatar[X, Y] <= 0)
+			{
+				AmbienteAvatar[X, Y] = 1;
+			}
+			else
+			{
+				AmbienteAvatar[X, Y]++;
+			}
 		}
 
 		private async Task ObtenerReconocerCoordenadasAuxiliares()
@@ -315,7 +330,7 @@ namespace AmbienteZelda
 			}
 		}
 
-		public void ObtenerCoordenadasAuxiliares(int x, int y, bool[] dir)
+		private void ObtenerCoordenadasAuxiliares(int x, int y, bool[] dir)
 		{
 			if (y > 0 && VerificarMovimiento(x, y - 1) && (dir[0] || dir[4])) //arriba 
 			{
@@ -335,7 +350,7 @@ namespace AmbienteZelda
 			}
 		}
 
-		public void ReconocerCoordenadasAuxiliares()
+		private void ReconocerCoordenadasAuxiliares()
 		{
 			for (int i = 0; i < CoordenadasAuxiliares1.Length; i++)
 			{
@@ -343,16 +358,76 @@ namespace AmbienteZelda
 				{
 					int x = CoordenadasAuxiliares1[i][0];
 					int y = CoordenadasAuxiliares1[i][1];
-					if (AmbienteAvatar[x, y] == -2 || AmbienteAvatar[x, y] == 0) //Quitarle el 0 para optimizar espacios por los que ya se paso
+					if (AmbienteAvatar[x, y] == -2 || AmbienteAvatar[x, y] >= 0) 
 					{
-						AmbienteAvatar[x, y] = 0;
-						Ventana.Ambiente[x, y].Image = Image.FromFile(RutaImagenAux1);
+						if (AmbienteAvatar[x, y] != 1)
+						{
+							AmbienteAvatar[x, y] = 0;
+						}
+						Ventana.Ambiente[x, y].Image = Image.FromFile(RutaImagenAux);
 					}
 					else
 					{
 						AmbienteAvatar[x, y] = -1;
 					}
 				}
+			}
+		}
+
+		public async Task ReconocimientoRandom(int visibles, int ocultas)
+		{
+			int x = X;
+			int y = Y;
+			int totales = visibles + ocultas;
+			BarraProgreso.Maximum = totales;
+			Progreso.Text = "0/" + totales.ToString();
+			PruebasReconocimientoRandom = new int[totales][,];
+			Random random = new Random();
+			for (int i = 0; i < totales; i++)
+			{
+				PruebasReconocimientoRandom[i] = new int[AmbienteAvatar.GetLength(0), AmbienteAvatar.GetLength(1)]; //Modifique aqui el 1 era 0
+				while (!EnCasa)
+				{
+					Ventana.Ambiente[X, Y].Image = null;
+					if (Mover(random.Next(0, 4)))
+					{
+						if (i < visibles)
+						{
+							Colocar();
+							await Task.Delay(100);
+						}
+						PruebasReconocimientoRandom[i][X, Y]++;
+					}
+				}
+				EnCasa = false;
+				X = x;
+				Y = y;
+				Colocar();
+				Ventana.Casa.Colocar();
+				BarraProgreso.PerformStep();
+				await Task.Delay(50); //
+				Progreso.Text = (i + 1).ToString() + "/" + totales;
+			}
+		}
+
+		private void ImprimirAmbiente()
+		{
+			for (int j = 0; j < AmbienteAvatar.GetLength(1); j++)
+			{
+				string linea = "";
+				for (int i = 0; i < AmbienteAvatar.GetLength(0); i++)
+				{
+				
+					if (AmbienteAvatar[i, j].ToString().Length == 1)
+					{
+						linea += "|0" + AmbienteAvatar[i, j].ToString();
+					}
+					else
+					{
+						linea += "|" + AmbienteAvatar[i, j].ToString();
+					}					
+				}
+				System.Diagnostics.Debug.WriteLine(linea);
 			}
 		}
 	}
