@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -170,7 +171,8 @@ namespace AmbienteZelda
 		public async Task LineaBresenhamAsync(bool reconocimiento = false) 
 		{
 			CoordenadasAuxiliares1 = new int[4][];
-			bool lineaRecalculada = false;
+			Random random = new Random();
+			int[] movimientos = null;
 			//Variables de distancia
 			int dX, dY, incXi, incYi, incXr, incYr, avR, av, avI;
 			int[] variablesDistancia = CalcularLineaBresenham();
@@ -186,17 +188,16 @@ namespace AmbienteZelda
 			//Ciclo para el trazado de las lineas
 			while (!VerificarEnCasa(X, Y))
 			{
-				if (!lineaRecalculada)
+				//MessageBox.Show(X + "," + Y);
+				Colocar();
+				await Task.Delay(250);
+				if (reconocimiento)
 				{
-					Colocar();
-					await Task.Delay(250);
-					if (reconocimiento)
-					{
-						ReconocerPosicion();
-						await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
-					}
-					await Task.Run(QuitarAsync);
+					ReconocerPosicion();
+					await Task.Run(ObtenerReconocerCoordenadasAuxiliares);
 				}
+				await Task.Run(QuitarAsync);
+				movimientos = MovimientosDisponibles();
 				if (av >= 0 && (VerificarMovimiento(X + incXi, Y + incYi) || VerificarEnCasa(X + incXi, Y + incYi))) //Inclinado
 				{
 					if (VerificarMovimientoCasa(X + incXi, Y) && VerificarMovimientoCasa(X + incXi, Y + incYi))
@@ -212,7 +213,6 @@ namespace AmbienteZelda
 						await Task.Run(QuitarAsync);
 						Y += incYi;
 						av = av + avI;
-						lineaRecalculada = false;
 					}
 					else if (VerificarMovimientoCasa(X, Y + incYi) && VerificarMovimientoCasa(X + incXi, Y + incYi))
 					{
@@ -227,7 +227,6 @@ namespace AmbienteZelda
 						await Task.Run(QuitarAsync);
 						X += incXi;
 						av = av + avI;
-						lineaRecalculada = false;
 					}
 					else
 					{
@@ -236,18 +235,16 @@ namespace AmbienteZelda
 						return;
 					}
 				}
-				else if (VerificarMovimientoCasa(X + incXr, Y + incYr)) //Recto
+				else if (VerificarMovimiento(X + incXr, Y + incYr) || VerificarEnCasa(X + incXr, Y + incYr)) //Recto
 				{
 					X+= incXr;
 					Y+= incYr;
 					av = av + avR;
-					lineaRecalculada = false;
 				}
-				/*else if (!lineaRecalculada) //Recalcular Linea Recta 
+				else if (movimientos != null && reconocimiento)
 				{
-					//Metodo para utilizar el reconocimiento
-					//Revisara los valores a sus lados y se movera aleatoriamente a los valores menores disponibles
-					//Cuando se mueve tratará con línea recta y si se puede la hará y saldrá de aqui pero si no seguirá moviendose
+					int movimiento = movimientos[random.Next(0, movimientos.Length)];
+					Mover(movimiento);
 					variablesDistancia = CalcularLineaBresenham();
 					dX = variablesDistancia[0];
 					dY = variablesDistancia[1];
@@ -258,8 +255,7 @@ namespace AmbienteZelda
 					avR = variablesDistancia[6];
 					av = variablesDistancia[7];
 					avI = variablesDistancia[8];
-					lineaRecalculada = true;
-				}*/
+				}
 				else
 				{
 					Colocar();
@@ -269,7 +265,62 @@ namespace AmbienteZelda
 			}
 			ImprimirAmbiente();
 		}
+		
+		private int MenorValor(int valor, int x, int y)
+		{
+			if (valor == -2 || AmbienteAvatar[x, y] < valor)
+			{
+				return AmbienteAvatar[x, y];
+			}
+			else
+			{
+				return valor;
+			}
+		}
 
+		private int[] MovimientosDisponibles()
+		{
+			int menorValor = -2;
+			List<int> movimientos = new List<int>();
+			if (VerificarMovimiento(X, Y - 1))
+			{
+				menorValor = MenorValor(menorValor, X, Y - 1);
+				movimientos.Add(0);
+			}
+			if (VerificarMovimiento(X + 1, Y))
+			{
+				menorValor = MenorValor(menorValor, X + 1, Y);
+				movimientos.Add(1);
+			}
+			if (VerificarMovimiento(X, Y + 1))
+			{
+				menorValor = MenorValor(menorValor, X, Y + 1);
+				movimientos.Add(2);
+			}
+			if (VerificarMovimiento(X - 1, Y))
+			{
+				menorValor = MenorValor(menorValor, X - 1, Y);
+				movimientos.Add(3);
+			}
+			if (movimientos.Contains(0) && AmbienteAvatar[X, Y - 1] != menorValor)
+			{
+				movimientos.Remove(0);
+			}
+			else if (movimientos.Contains(1) && AmbienteAvatar[X + 1, Y] != menorValor)
+			{
+				movimientos.Remove(1);
+			}
+			else if (movimientos.Contains(2) && AmbienteAvatar[X, Y + 1] != menorValor)
+			{
+				movimientos.Remove(2);
+			}
+			else if (movimientos.Contains(3) && AmbienteAvatar[X - 1, Y] != menorValor)
+			{
+				movimientos.Remove(3);
+			}
+			return movimientos.ToArray();
+		}
+		
 		private void ReconocerPosicion()
 		{
 			if (AmbienteAvatar[X, Y] <= 0)
