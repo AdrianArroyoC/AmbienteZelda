@@ -1,6 +1,8 @@
-﻿namespace AmbienteZelda
+﻿using System;
+
+namespace AmbienteZelda
 {
-    partial class Ventana
+	partial class Ventana
     {
         /// <summary>
         /// Variable del diseñador necesaria.
@@ -42,8 +44,6 @@
 			this.BotonObstaculo = new System.Windows.Forms.Button();
 			this.BotonLineaRectaReconocimiento = new System.Windows.Forms.Button();
 			this.movimientoCajaAgrupacion = new System.Windows.Forms.GroupBox();
-			this.Progreso = new System.Windows.Forms.Label();
-			this.BarraProgresoRandomReconocimiento = new System.Windows.Forms.ProgressBar();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.CajaTextoVisibles = new System.Windows.Forms.TextBox();
@@ -54,6 +54,7 @@
 			this.partidaCajaAgrupacion = new System.Windows.Forms.GroupBox();
 			this.BotonCargar = new System.Windows.Forms.Button();
 			this.BotonGuardar = new System.Windows.Forms.Button();
+			this.BotonMejorRutaRandom = new System.Windows.Forms.Button();
 			this.datosCajaAgrupacion.SuspendLayout();
 			this.modalidadesCajaAgrupacion.SuspendLayout();
 			this.movimientoCajaAgrupacion.SuspendLayout();
@@ -209,8 +210,7 @@
 			// 
 			// movimientoCajaAgrupacion
 			// 
-			this.movimientoCajaAgrupacion.Controls.Add(this.Progreso);
-			this.movimientoCajaAgrupacion.Controls.Add(this.BarraProgresoRandomReconocimiento);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonMejorRutaRandom);
 			this.movimientoCajaAgrupacion.Controls.Add(this.label3);
 			this.movimientoCajaAgrupacion.Controls.Add(this.label4);
 			this.movimientoCajaAgrupacion.Controls.Add(this.CajaTextoVisibles);
@@ -225,25 +225,6 @@
 			this.movimientoCajaAgrupacion.TabIndex = 4;
 			this.movimientoCajaAgrupacion.TabStop = false;
 			this.movimientoCajaAgrupacion.Text = "Movimiento";
-			// 
-			// Progreso
-			// 
-			this.Progreso.AutoSize = true;
-			this.Progreso.BackColor = System.Drawing.Color.Transparent;
-			this.Progreso.Location = new System.Drawing.Point(142, 184);
-			this.Progreso.Name = "Progreso";
-			this.Progreso.Size = new System.Drawing.Size(44, 17);
-			this.Progreso.TabIndex = 12;
-			this.Progreso.Text = "0/110";
-			// 
-			// BarraProgresoRandomReconocimiento
-			// 
-			this.BarraProgresoRandomReconocimiento.Location = new System.Drawing.Point(7, 178);
-			this.BarraProgresoRandomReconocimiento.Maximum = 110;
-			this.BarraProgresoRandomReconocimiento.Name = "BarraProgresoRandomReconocimiento";
-			this.BarraProgresoRandomReconocimiento.Size = new System.Drawing.Size(325, 28);
-			this.BarraProgresoRandomReconocimiento.Step = 1;
-			this.BarraProgresoRandomReconocimiento.TabIndex = 11;
 			// 
 			// label3
 			// 
@@ -293,7 +274,7 @@
 			this.BotonMejorRutaReconocimiento.Name = "BotonMejorRutaReconocimiento";
 			this.BotonMejorRutaReconocimiento.Size = new System.Drawing.Size(325, 28);
 			this.BotonMejorRutaReconocimiento.TabIndex = 6;
-			this.BotonMejorRutaReconocimiento.Text = "Mejor Ruta del Random";
+			this.BotonMejorRutaReconocimiento.Text = "Mejor Ruta del Reconocimiento";
 			this.BotonMejorRutaReconocimiento.UseVisualStyleBackColor = true;
 			this.BotonMejorRutaReconocimiento.Click += new System.EventHandler(this.BotonMejorRutaReconocimiento_Click);
 			// 
@@ -355,6 +336,18 @@
 			this.BotonGuardar.UseVisualStyleBackColor = true;
 			this.BotonGuardar.Click += new System.EventHandler(this.BotonGuardar_Click);
 			// 
+			// BotonMejorRutaRandom
+			// 
+			this.BotonMejorRutaRandom.Enabled = false;
+			this.BotonMejorRutaRandom.Location = new System.Drawing.Point(8, 178);
+			this.BotonMejorRutaRandom.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonMejorRutaRandom.Name = "BotonMejorRutaRandom";
+			this.BotonMejorRutaRandom.Size = new System.Drawing.Size(325, 28);
+			this.BotonMejorRutaRandom.TabIndex = 11;
+			this.BotonMejorRutaRandom.Text = "Mejor Ruta del Random";
+			this.BotonMejorRutaRandom.UseVisualStyleBackColor = true;
+			this.BotonMejorRutaRandom.Click += new System.EventHandler(this.BotonMejorRutaRandom_Click);
+			// 
 			// Ventana
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -409,8 +402,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox CajaTextoVisibles;
 		private System.Windows.Forms.TextBox CajaTextoOcultos;
-		public System.Windows.Forms.Label Progreso;
-		public System.Windows.Forms.ProgressBar BarraProgresoRandomReconocimiento;
+		private System.Windows.Forms.Button BotonMejorRutaRandom;
 	}
 }
 

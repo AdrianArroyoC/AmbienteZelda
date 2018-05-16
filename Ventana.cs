@@ -136,7 +136,7 @@ namespace AmbienteZelda
 			}
 			else if (Modo == 1 && Link == null && CajaImagen.Image == null)
 			{
-				Link = new Avatar(x, y, rutaImagenAvatar, rutaImagenAux, AmbienteAvatar, BarraProgresoRandomReconocimiento, Progreso);
+				Link = new Avatar(x, y, rutaImagenAvatar, rutaImagenAux, AmbienteAvatar);
 				BotonCasa.Enabled = true;
 				PanelAmbiente.Focus();
 				Text = Text.Replace(" *","") + " *";
@@ -381,12 +381,18 @@ namespace AmbienteZelda
 		private async void BotonRandomReconocimiento_Click(object sender, EventArgs e)
 		{
 			await Link.ReconocimientoRandom(Convert.ToInt32(CajaTextoVisibles.Text), Convert.ToInt32(CajaTextoOcultos.Text));
+			BotonMejorRutaRandom.Enabled = true;
 			BotonMejorRutaReconocimiento.Enabled = true;
 		}
-		
-		private void BotonMejorRutaReconocimiento_Click(object sender, EventArgs e)
+
+		private async void BotonMejorRutaRandom_Click(object sender, EventArgs e)
 		{
-			//Método de seguimiento de números según la unión de todas las pruebas //A*
+			await Link.MejorRutaRandom();
+		}
+
+		private async void BotonMejorRutaReconocimiento_Click(object sender, EventArgs e)
+		{
+			await Link.MejorRutaReconocimiento();
 		}
 	}
 }

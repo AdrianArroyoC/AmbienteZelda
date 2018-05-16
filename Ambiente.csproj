@@ -52,6 +52,12 @@
     <Compile Include="Partida.cs" />
     <Compile Include="Meta.cs" />
     <Compile Include="Objeto.cs" />
+    <Compile Include="Progreso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Progreso.Designer.cs">
+      <DependentUpon>Progreso.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ventana.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +67,9 @@
     <Compile Include="Avatar.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Progreso.resx">
+      <DependentUpon>Progreso.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ventana.resx">
       <DependentUpon>Ventana.cs</DependentUpon>
     </EmbeddedResource>
