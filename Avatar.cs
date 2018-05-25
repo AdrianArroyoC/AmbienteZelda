@@ -239,8 +239,7 @@ namespace AmbienteZelda
 				}
 				else if (movimientos != null && reconocimiento)
 				{
-					int movimiento = movimientos[random.Next(0, movimientos.Length)];
-					Mover(movimiento);
+					Mover(movimientos[random.Next(0, movimientos.Length)]);
 					variablesDistancia = CalcularLineaBresenham();
 					dX = variablesDistancia[0];
 					dY = variablesDistancia[1];
@@ -443,8 +442,8 @@ namespace AmbienteZelda
 							Colocar();
 							await Task.Delay(100);
 						}
-						PruebasReconocimientoRandom[i][X, Y]++;
-						PasosPruebasReconocimientoRandom[i]++;
+						PruebasReconocimientoRandom[i][X, Y] = 0;
+						//PasosPruebasReconocimientoRandom[i]++;
 					}
 				}
 				EnCasa = false;
@@ -482,83 +481,118 @@ namespace AmbienteZelda
 			}
 		}
 
-		private void MarcarCamino(int x, int y, int valor)
-		{
-			if (y - 1 > 0 && VerificarMovimiento(x, y - 1))
-			{
-				if (AmbienteAvatar[x, y - 1] > 0)
-				{
-					MarcarCamino(x, y - 1, valor);
-				}
-			}
-			if (x + 1 < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(x + 1, y))
-			{
-				if (AmbienteAvatar[x + 1, y] > 0)
-				{
-					MarcarCamino(x + 1, y, valor);
-				}
-			}
-			if (y + 1 < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(x, y + 1))
-			{
-				if (AmbienteAvatar[x, y + 1] > 0)
-				{
-					MarcarCamino(x, y + 1, valor);
-				}
-			}
-			if (x - 1 > 0 && VerificarMovimiento(x - 1, y))
-			{
-				if (AmbienteAvatar[x - 1, y] > 0)
-				{
-					MarcarCamino(x - 1, y, valor);
-				}
-			}
-		}
-
-		public async Task MejorRutaRandom()
-		{
-			int menor = PasosPruebasReconocimientoRandom[0];
-			for (int i = 1; i < PasosPruebasReconocimientoRandom.Length; i++)
-			{
-				if (PasosPruebasReconocimientoRandom[i] < menor)
-				{
-					menor = PasosPruebasReconocimientoRandom[i];
-				}
-			}
-			List<int> posiciones = new List<int>();
-			for (int i = 0; i < PasosPruebasReconocimientoRandom.Length; i++)
-			{
-				if (PasosPruebasReconocimientoRandom[i] == menor)
-				{
-					posiciones.Add(i);
-				}
-			}
-			int[] posicionesMenores = posiciones.ToArray();
-			if (posicionesMenores.Length > 1)
-			{
-				AmbienteAvatar = PruebasReconocimientoRandom[posicionesMenores[random.Next(0, posicionesMenores.Length)]];
-			}
-			else
-			{
-				AmbienteAvatar = PruebasReconocimientoRandom[posicionesMenores[0]];
-			}
-			ImprimirAmbiente();
-			MarcarCamino(Ventana.Casa.X, Ventana.Casa.Y, 1);
-			ImprimirAmbiente();
-		}
-
-		public async Task MejorRutaReconocimiento() 
+		public async Task MejorRuta() 
 		{
 			for (int i = 0; i < PruebasReconocimientoRandom.Length; i++)
 			{
 				for (int j = 0; j < PruebasReconocimientoRandom[i].GetLength(1); j++)
 				{
-					for (int k = 0; k < PruebasReconocimientoRandom[k].GetLength(0); k++)
+					for (int k = 0; k < PruebasReconocimientoRandom[i].GetLength(0); k++)
 					{
-						AmbienteAvatar[j, k] += PruebasReconocimientoRandom[i][j, k];
+						if (PruebasReconocimientoRandom[i][j, k] == 0)
+						{
+							AmbienteAvatar[j, k] = 0;
+						}
 					}
 				}
 			}
-			ImprimirAmbiente();
+			await Wavefront();
+		}
+
+		private bool MarcarCamino(int x, int y, int marca)
+		{
+			if (y - 1 > 0 && VerificarMovimiento(x, y - 1))
+			{
+				if (AmbienteAvatar[x, y - 1] == 0)
+				{
+					AmbienteAvatar[x, y - 1] = marca + 1;
+				}
+				if ((x == X && y - 1 == Y))
+				{
+					return true;
+				}
+			}
+			if (x + 1 < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(x + 1, y))
+			{
+				if (AmbienteAvatar[x + 1, y] == 0)
+				{
+					AmbienteAvatar[x + 1, y] = marca + 1;
+				}
+				if ((x + 1 == X && y == Y))
+				{
+					return true;
+				}
+			}
+			if (y + 1 < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(x, y + 1))
+			{
+				if (AmbienteAvatar[x, y + 1] == 0)
+				{
+					AmbienteAvatar[x, y + 1] = marca + 1;
+				}
+				if ((x == X && y + 1 == Y))
+				{
+					return true;
+				}
+			}
+			if (x - 1 > 0 && VerificarMovimiento(x - 1, y))
+			{
+				if (AmbienteAvatar[x - 1, y] == 0)
+				{
+					AmbienteAvatar[x - 1, y] = marca + 1;
+				}
+				if ((x - 1 == X && y == Y))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private async Task SeguirCamino()
+		{
+			while (!VerificarEnCasa(X, Y))
+			{
+				Colocar();
+				await Task.Delay(250);
+				if (Y - 1 > 0 && VerificarMovimiento(X, Y - 1))
+				{
+				}
+				if (X + 1 < Ventana.Ambiente.GetLength(0) - 1 && VerificarMovimiento(X + 1, Y))
+				{
+
+				}
+				if (Y + 1 < Ventana.Ambiente.GetLength(1) - 1 && VerificarMovimiento(X, Y + 1))
+				{
+				}
+				if (X - 1 > 0 && VerificarMovimiento(X - 1, Y))
+				{
+				}
+			}
+		}
+
+		private async Task Wavefront()
+		{
+			bool avatarEncontrado = false;
+			int marca = 0;
+			MarcarCamino(Ventana.Casa.X, Ventana.Casa.Y, marca);
+			marca++;
+			while (!avatarEncontrado)
+			{
+				for (int i = 0; i < AmbienteAvatar.GetLength(1); i++)
+				{
+					for (int j = 0; j < AmbienteAvatar.GetLength(0); j++)
+					{
+						if (MarcarCamino(i, j, marca))
+						{
+							avatarEncontrado = true;
+							i = AmbienteAvatar.GetLength(0);
+							j = AmbienteAvatar.GetLength(1);
+						}
+					}
+				}
+				marca++;
+			}
+			await SeguirCamino();
 		}
 	}
 }

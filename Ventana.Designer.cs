@@ -44,17 +44,16 @@ namespace AmbienteZelda
 			this.BotonObstaculo = new System.Windows.Forms.Button();
 			this.BotonLineaRectaReconocimiento = new System.Windows.Forms.Button();
 			this.movimientoCajaAgrupacion = new System.Windows.Forms.GroupBox();
+			this.BotonMejorRuta = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.CajaTextoVisibles = new System.Windows.Forms.TextBox();
 			this.CajaTextoOcultos = new System.Windows.Forms.TextBox();
-			this.BotonMejorRutaReconocimiento = new System.Windows.Forms.Button();
 			this.BotonRandomReconocimiento = new System.Windows.Forms.Button();
 			this.BotonLineaRectaSimple = new System.Windows.Forms.Button();
 			this.partidaCajaAgrupacion = new System.Windows.Forms.GroupBox();
 			this.BotonCargar = new System.Windows.Forms.Button();
 			this.BotonGuardar = new System.Windows.Forms.Button();
-			this.BotonMejorRutaRandom = new System.Windows.Forms.Button();
 			this.datosCajaAgrupacion.SuspendLayout();
 			this.modalidadesCajaAgrupacion.SuspendLayout();
 			this.movimientoCajaAgrupacion.SuspendLayout();
@@ -210,12 +209,11 @@ namespace AmbienteZelda
 			// 
 			// movimientoCajaAgrupacion
 			// 
-			this.movimientoCajaAgrupacion.Controls.Add(this.BotonMejorRutaRandom);
+			this.movimientoCajaAgrupacion.Controls.Add(this.BotonMejorRuta);
 			this.movimientoCajaAgrupacion.Controls.Add(this.label3);
 			this.movimientoCajaAgrupacion.Controls.Add(this.label4);
 			this.movimientoCajaAgrupacion.Controls.Add(this.CajaTextoVisibles);
 			this.movimientoCajaAgrupacion.Controls.Add(this.CajaTextoOcultos);
-			this.movimientoCajaAgrupacion.Controls.Add(this.BotonMejorRutaReconocimiento);
 			this.movimientoCajaAgrupacion.Controls.Add(this.BotonRandomReconocimiento);
 			this.movimientoCajaAgrupacion.Controls.Add(this.BotonLineaRectaSimple);
 			this.movimientoCajaAgrupacion.Controls.Add(this.BotonLineaRectaReconocimiento);
@@ -225,6 +223,19 @@ namespace AmbienteZelda
 			this.movimientoCajaAgrupacion.TabIndex = 4;
 			this.movimientoCajaAgrupacion.TabStop = false;
 			this.movimientoCajaAgrupacion.Text = "Movimiento";
+			// 
+			// BotonMejorRuta
+			// 
+			this.BotonMejorRuta.Enabled = false;
+			this.BotonMejorRuta.Location = new System.Drawing.Point(8, 178);
+			this.BotonMejorRuta.Margin = new System.Windows.Forms.Padding(4);
+			this.BotonMejorRuta.Name = "BotonMejorRuta";
+			this.BotonMejorRuta.Size = new System.Drawing.Size(325, 28);
+			this.BotonMejorRuta.TabIndex = 11;
+			this.BotonMejorRuta.Text = "Mejor Ruta del Reconocimiento Random";
+			this.BotonMejorRuta.UseVisualStyleBackColor = true;
+			this.BotonMejorRuta.Visible = false;
+			this.BotonMejorRuta.Click += new System.EventHandler(this.BotonMejorRuta_Click);
 			// 
 			// label3
 			// 
@@ -265,18 +276,6 @@ namespace AmbienteZelda
 			this.CajaTextoOcultos.Size = new System.Drawing.Size(73, 22);
 			this.CajaTextoOcultos.TabIndex = 8;
 			this.CajaTextoOcultos.Text = "100";
-			// 
-			// BotonMejorRutaReconocimiento
-			// 
-			this.BotonMejorRutaReconocimiento.Enabled = false;
-			this.BotonMejorRutaReconocimiento.Location = new System.Drawing.Point(7, 216);
-			this.BotonMejorRutaReconocimiento.Margin = new System.Windows.Forms.Padding(4);
-			this.BotonMejorRutaReconocimiento.Name = "BotonMejorRutaReconocimiento";
-			this.BotonMejorRutaReconocimiento.Size = new System.Drawing.Size(325, 28);
-			this.BotonMejorRutaReconocimiento.TabIndex = 6;
-			this.BotonMejorRutaReconocimiento.Text = "Mejor Ruta del Reconocimiento";
-			this.BotonMejorRutaReconocimiento.UseVisualStyleBackColor = true;
-			this.BotonMejorRutaReconocimiento.Click += new System.EventHandler(this.BotonMejorRutaReconocimiento_Click);
 			// 
 			// BotonRandomReconocimiento
 			// 
@@ -336,18 +335,6 @@ namespace AmbienteZelda
 			this.BotonGuardar.UseVisualStyleBackColor = true;
 			this.BotonGuardar.Click += new System.EventHandler(this.BotonGuardar_Click);
 			// 
-			// BotonMejorRutaRandom
-			// 
-			this.BotonMejorRutaRandom.Enabled = false;
-			this.BotonMejorRutaRandom.Location = new System.Drawing.Point(8, 178);
-			this.BotonMejorRutaRandom.Margin = new System.Windows.Forms.Padding(4);
-			this.BotonMejorRutaRandom.Name = "BotonMejorRutaRandom";
-			this.BotonMejorRutaRandom.Size = new System.Drawing.Size(325, 28);
-			this.BotonMejorRutaRandom.TabIndex = 11;
-			this.BotonMejorRutaRandom.Text = "Mejor Ruta del Random";
-			this.BotonMejorRutaRandom.UseVisualStyleBackColor = true;
-			this.BotonMejorRutaRandom.Click += new System.EventHandler(this.BotonMejorRutaRandom_Click);
-			// 
 			// Ventana
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -396,13 +383,12 @@ namespace AmbienteZelda
 		private System.Windows.Forms.Button BotonCargar;
 		private System.Windows.Forms.Button BotonGuardar;
 		private System.Windows.Forms.Button BotonLineaRectaSimple;
-		private System.Windows.Forms.Button BotonMejorRutaReconocimiento;
 		private System.Windows.Forms.Button BotonRandomReconocimiento;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox CajaTextoVisibles;
 		private System.Windows.Forms.TextBox CajaTextoOcultos;
-		private System.Windows.Forms.Button BotonMejorRutaRandom;
+		private System.Windows.Forms.Button BotonMejorRuta;
 	}
 }
 

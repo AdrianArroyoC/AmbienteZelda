@@ -254,7 +254,7 @@ namespace AmbienteZelda
 			BotonRandomReconocimiento.Enabled = false;
 			CajaTextoVisibles.Enabled = false;
 			CajaTextoOcultos.Enabled = false;
-			BotonMejorRutaReconocimiento.Enabled = false;
+			BotonMejorRuta.Enabled = false;
 			Ambiente[Casa.X, Casa.Y].Image = Image.FromFile(rutaImagenFin);
 			MessageBox.Show("Game Over");
 		}
@@ -347,7 +347,7 @@ namespace AmbienteZelda
 					CajaTextoOcultos.Enabled = true;
 					if (Link.PruebasReconocimientoRandom != null)
 					{
-						BotonMejorRutaReconocimiento.Enabled = true;
+						BotonMejorRuta.Enabled = true;
 					}
 				}
 				CajaTextoCuadrosBase.Text = CuadrosX.ToString();
@@ -381,18 +381,12 @@ namespace AmbienteZelda
 		private async void BotonRandomReconocimiento_Click(object sender, EventArgs e)
 		{
 			await Link.ReconocimientoRandom(Convert.ToInt32(CajaTextoVisibles.Text), Convert.ToInt32(CajaTextoOcultos.Text));
-			BotonMejorRutaRandom.Enabled = true;
-			BotonMejorRutaReconocimiento.Enabled = true;
+			BotonMejorRuta.Enabled = true;
 		}
 
-		private async void BotonMejorRutaRandom_Click(object sender, EventArgs e)
+		private async void BotonMejorRuta_Click(object sender, EventArgs e)
 		{
-			await Link.MejorRutaRandom();
-		}
-
-		private async void BotonMejorRutaReconocimiento_Click(object sender, EventArgs e)
-		{
-			await Link.MejorRutaReconocimiento();
+			await Link.MejorRuta();
 		}
 	}
 }
