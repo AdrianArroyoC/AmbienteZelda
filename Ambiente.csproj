@@ -60,7 +60,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -110,7 +110,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Ambiente_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -137,14 +136,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\Arbol.jpg" />
-    <Content Include="src\Casa.jpg" />
-    <Content Include="src\CasaLink.jpg" />
-    <Content Include="src\Fondo1.jpg" />
-    <Content Include="src\Fondo2.jpg" />
-    <Content Include="src\Hada.jpg" />
-    <Content Include="src\Icono.ico" />
-    <Content Include="src\Link.jpg" />
+    <None Include="src\Arbol.jpg" />
+    <None Include="src\Casa.jpg" />
+    <None Include="src\CasaLink.jpg" />
+    <None Include="src\Fondo1.jpg" />
+    <None Include="src\Fondo2.jpg" />
+    <None Include="src\Hada.jpg" />
+    <None Include="src\Icono.ico" />
+    <None Include="src\Link.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

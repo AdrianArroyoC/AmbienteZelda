@@ -9,12 +9,12 @@ namespace AmbienteZelda
 {
     public partial class Ventana : Form 
     {
-		private readonly String rutaImagenAvatar = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Link.jpg";
-		private readonly String rutaImagenCasa = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Casa.jpg";
-		private readonly String rutaImagenArbol = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Arbol.jpg";
-		private readonly String rutaImagenFin = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\CasaLink.jpg";
-		private readonly String rutaImagenAux = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Hada.jpg";
-		private readonly String rutaFondo = "D:\\Dropbox\\Maestria\\Cuarto semestre\\Patrones de diseño y frameworks\\AmbienteZelda\\AmbienteZelda\\src\\Fondo2.jpg";
+        private readonly String rutaImagenAvatar = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\Link.jpg";
+		private readonly String rutaImagenCasa = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\Casa.jpg";
+		private readonly String rutaImagenArbol = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\Arbol.jpg";
+		private readonly String rutaImagenFin = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\CasaLink.jpg";
+		private readonly String rutaImagenAux = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\Hada.jpg";
+		private readonly String rutaFondo = "C:\\Users\\emvcxsdza\\Documents\\GitHub\\AmbienteZelda\\src\\Fondo2.jpg";
 		private int CuadrosX { get; set; }
 		private int CuadrosY { get; set; }
 		private int Modo { get; set; } //0=Obstaculos, 1=Avatar y 2=Meta
